@@ -1,0 +1,34 @@
+/**
+ * Constantes de contato e estúdio do Eliá.
+ *
+ * Fonte: material oficial da Letícia (apresentações de orçamento).
+ * Itens marcados como PENDENTE devem ser confirmados com a Letícia antes do
+ * deploy. Mantidos aqui em um único lugar para facilitar a atualização.
+ */
+
+// ─────────── Contato ───────────
+/** Telefone/WhatsApp em formato de exibição (DDD 86, Teresina). */
+export const CONTACT_PHONE = "(86) 98872-7016";
+/** Mesmo número em formato E.164 para deeplinks do WhatsApp. */
+export const CONTACT_PHONE_E164 = "5586988727016";
+
+export const INSTAGRAM_HANDLE = "@eliaidentidadevisual";
+export const INSTAGRAM_URL = "https://instagram.com/eliaidentidadevisual";
+
+/** PENDENTE: confirmar a URL da página da Letícia no Pinterest. */
+export const PINTEREST_URL = "https://br.pinterest.com/eliaidentidadevisual";
+
+/** PENDENTE: confirmar e-mail oficial com a Letícia. */
+export const CONTACT_EMAIL = "[EMAIL_AQUI]";
+
+// ─────────── Estúdio (Teresina, PI) ───────────
+export const STUDIO_ADDRESS = "Rua das Orquídeas, 781";
+export const STUDIO_CITY = "Teresina, PI";
+/** Link do Google Maps derivado do endereço, fonte única para todas as LPs. */
+export const STUDIO_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  `${STUDIO_ADDRESS}, ${STUDIO_CITY}`,
+)}`;
+export const STUDIO_SCHEDULING_NOTE =
+  "Atendimento presencial mediante agendamento prévio.";
+/** Linha curta usada nos rodapés das LPs. */
+export const STUDIO_FOOTER_LINE = "Teresina, PI · Atendimento mediante agendamento";

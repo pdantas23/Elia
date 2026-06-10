@@ -1,0 +1,17 @@
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /elia/404.html
+
+RewriteEngine On
+RewriteBase /elia/
+
+# Serve static files and directories directly
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Route /dashboard/leads/<id>/ to the pre-rendered placeholder
+# The client-side JS reads the real ID from the URL and fetches data
+RewriteRule ^dashboard/leads/([a-zA-Z0-9_-]+)/?$ /elia/dashboard/leads/placeholder/index.html [L]
