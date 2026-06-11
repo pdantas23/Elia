@@ -30,5 +30,9 @@ export const STUDIO_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=
 )}`;
 export const STUDIO_SCHEDULING_NOTE =
   "Atendimento presencial mediante agendamento prévio.";
+/** Texto aprovado pela cliente para o bloco Estúdio das LPs (jun/2026). */
+export const STUDIO_VISIT_TITLE = "Em Teresina. Agende uma visita.";
+export const STUDIO_VISIT_NOTE =
+  "O atendimento presencial acontece com hora marcada, para que cada projeto tenha o tempo e a atenção que merece. Para personalizar uma solução, entre em contato e agende uma visita.";
 /** Linha curta usada nos rodapés das LPs. */
 export const STUDIO_FOOTER_LINE = "Teresina, PI · Atendimento mediante agendamento";

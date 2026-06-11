@@ -43,7 +43,7 @@ export function LeadDetail({ lead, comerciais }: LeadDetailProps) {
   };
 
   const whatsappUrl = `https://wa.me/${lead.whatsapp}?text=${encodeURIComponent(
-    `Olá ${lead.nome}, sou da Eliá Identidade Visual. Recebi seu contato pelo site e queria conversar sobre seu projeto.`
+    `Olá ${lead.nome}, sou do Eliá Identidade Visual. Recebi seu contato pelo site e queria conversar sobre seu projeto.`
   )}`;
 
   return (

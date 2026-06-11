@@ -48,7 +48,7 @@ const LINKS: LinkItem[] = [
   {
     key: "home",
     label: "Página inicial",
-    meta: "Conhecer a Eliá",
+    meta: "Conhecer o Eliá",
     href: "/",
   },
   {

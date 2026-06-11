@@ -19,15 +19,16 @@ import { ParallaxY } from "@/components/landing/ParallaxY";
 import { PhotoCarousel } from "@/components/landing/PhotoCarousel";
 import { PhotoPlaceholder } from "@/components/landing/PhotoPlaceholder";
 import { Reveal } from "@/components/landing/Reveal";
-import { TrackedLink } from "@/components/landing/TrackedLink";
 import { Topbar } from "@/components/landing/Topbar";
+import { TrackedLink } from "@/components/landing/TrackedLink";
 import { WAButton } from "@/components/landing/WAButton";
 import { WALink } from "@/components/landing/WALink";
 import {
   STUDIO_ADDRESS,
   STUDIO_CITY,
   STUDIO_MAPS_URL,
-  STUDIO_SCHEDULING_NOTE,
+  STUDIO_VISIT_NOTE,
+  STUDIO_VISIT_TITLE,
 } from "@/lib/constants";
 import { assetPath } from "@/lib/utils";
 import { WHATSAPP_MESSAGES, whatsappLink } from "@/lib/whatsapp";
@@ -35,7 +36,7 @@ import { WHATSAPP_MESSAGES, whatsappLink } from "@/lib/whatsapp";
 export const metadata: Metadata = {
   title: "Eliá Identidade Visual",
   description:
-    "Escritório de identidade visual com domínio de produção gráfica. Atende empresas e eventos com o mesmo critério: o projeto só termina quando o material chega à mão do cliente.",
+    "Escritório de identidade visual com domínio de produção gráfica. Atende empresas e eventos com o mesmo critério: o projeto só termina quando o material chega na mão do cliente, e funciona em uso.",
   openGraph: {
     title: "Eliá Identidade Visual",
     description:
@@ -93,7 +94,7 @@ const TWO_PATHS: Array<{
   },
   {
     title: "Identidade para eventos",
-    desc: "Convite, menu, sinalização do dia, lembranças.",
+    desc: "Convite, save the date, menu, sinalização do dia, lembrancinhas. Material físico pensado para gerar uma experiência única.",
     href: "/eventos",
     project: "Convite entregue ao convidado",
     type: "Projeto evento",
@@ -102,13 +103,28 @@ const TWO_PATHS: Array<{
   },
 ];
 
-// Etapas. Descrição máx. 12 palavras.
+// Etapas. Copy aprovada pela cliente (jun/2026).
 const PROCESS_STEPS = [
-  { title: "Briefing", desc: "Entender o que está sendo construído e quem assina." },
-  { title: "Conceito", desc: "Paleta, tipografia e a razão de cada escolha." },
-  { title: "Aplicação", desc: "A identidade vira material, do impresso ao ambiente." },
-  { title: "Execução", desc: "Gráfica e fornecedor definidos, produção acompanhada de perto." },
-  { title: "Entrega", desc: "O material chega pronto para usar." },
+  {
+    title: "Briefing",
+    desc: "Uma conversa para entender o que está sendo construído e quem é o rosto por trás daquela identidade visual.",
+  },
+  {
+    title: "Conceito",
+    desc: "A direção visual ganha forma: paleta, tipografia, referências e a razão de cada escolha.",
+  },
+  {
+    title: "Aplicação",
+    desc: "A identidade se transforma nos materiais que o projeto pede, do impresso ao ambiente.",
+  },
+  {
+    title: "Execução",
+    desc: "Gráfica e fornecedor definidos, especificação fechada e produção acompanhada de perto.",
+  },
+  {
+    title: "Entrega",
+    desc: "O material chega pronto para usar, com orientação para as próximas aplicações.",
+  },
 ];
 
 const PROJECT_OPTIONS = ["Corporativo", "Evento", "Outro", "Ainda não sei"];
@@ -166,10 +182,12 @@ export default function HomePage() {
               <h2 className={H2}>
                 Dois caminhos.
                 <br />
-                O mesmo critério.
+                O mesmo critério em ambos.
               </h2>
               <p className={LEDE_CENTER}>
-                Corporativo, onde a marca se destaca. Festivo, para o evento.
+                O Eliá atende dois universos com o mesmo nível de cuidado e domínio técnico: o
+                universo Corporativo, onde sua marca se destaca; e a área Festiva, elevando as
+                expectativas do seu evento.
               </p>
             </Reveal>
 
@@ -198,6 +216,25 @@ export default function HomePage() {
                 </Reveal>
               ))}
             </div>
+
+            <Reveal className="mt-[clamp(28px,4vw,44px)] text-center">
+              <p className="text-[15.5px] leading-[1.6] text-[var(--ink-soft)] m-0">
+                Não tem certeza ainda?{" "}
+                <TrackedLink
+                  href="#contato"
+                  trackingEvent={{
+                    name: "cta_click",
+                    page: "/",
+                    section: "caminhos",
+                    button_label: "Entre em contato conosco",
+                    destination: "form",
+                  }}
+                  className="text-[var(--ink)] underline underline-offset-4 decoration-[var(--line-strong)] transition-opacity hover:opacity-70"
+                >
+                  Entre em contato conosco e orientamos você em cada passo.
+                </TrackedLink>
+              </p>
+            </Reveal>
           </div>
         </section>
 
@@ -208,8 +245,11 @@ export default function HomePage() {
               <div className={EYEBROW}>
                 <span>Projetos executados</span>
               </div>
-              <h2 className={H2}>Do olhar ao toque.</h2>
-              <p className={LEDE_CENTER}>Projetos que confiaram no Eliá.</p>
+              <h2 className={H2}>Experiências marcantes exploram todos os sentidos.</h2>
+              <p className={LEDE_CENTER}>
+                Amamos compartilhar os projetos que depositaram sua confiança no Eliá.
+                Cada momento vivido foi único, indo do olhar ao toque.
+              </p>
             </Reveal>
           </div>
 
@@ -226,78 +266,11 @@ export default function HomePage() {
         <InlineWA
           section="portfolio"
           waHref={WA_HREF}
-          text="Algum dos projetos inspirou você? Vamos conversar."
+          text="Algum dos projetos inspirou você? Entre em contato e vamos conversar."
         />
 
-        {/* ═══ 4. MANIFESTO ═══ Respiro contemplativo no meio. (mantido) */}
-        <section className="py-[clamp(64px,11vw,128px)] bg-[var(--surface)] border-t border-b border-[var(--line)]">
-          <div className={CONTAINER}>
-            <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-[clamp(32px,5vw,80px)] items-center">
-              <Reveal variant="photo">
-                <PhotoPlaceholder
-                  ratio="r-43"
-                  project="Laís e Carlos"
-                  type="Identidade aplicada"
-                  src={assetPath(`${PORTFOLIO_BASE}/casamentos/lais-e-carlos.webp`)}
-                  sizes="(max-width: 1024px) 100vw, 48vw"
-                />
-              </Reveal>
-              <Reveal delayMs={120} className="flex flex-col gap-5">
-                <div className={EYEBROW}>
-                  <span>A expectativa vira experiência</span>
-                </div>
-                <p className={`${FONT_DISPLAY} italic font-medium text-[clamp(26px,3.6vw,46px)] leading-[1.16] tracking-[-0.005em] text-[var(--ink)] m-0 text-balance`}>
-                  A expectativa é traduzir todo o espírito da sua marca em um
-                  projeto de identidade visual único e marcante.
-                </p>
-              </Reveal>
-            </div>
-          </div>
-        </section>
-
-        {/* ═══ 5. COMO FUNCIONA ═══ Etapas + Prazos, comprimido. */}
-        <section className="pt-[clamp(48px,9vw,104px)] pb-[clamp(36px,5vw,60px)]">
-          <div className={CONTAINER}>
-            <Reveal className={HEAD_CENTER}>
-              <div className={EYEBROW}>
-                <span>Como funciona</span>
-              </div>
-              <h2 className={H2}>Cinco etapas fundamentais.</h2>
-              <p className={LEDE_CENTER}>O mesmo processo para empresas e eventos.</p>
-            </Reveal>
-
-            <Reveal>
-              <ol className="grid grid-cols-1 gap-[2px] list-none p-0 m-0 sm:grid-cols-5">
-                {PROCESS_STEPS.map((s, i) => (
-                  <li
-                    key={i}
-                    className="flex flex-col items-center text-center gap-2 px-3 py-[clamp(18px,2.5vw,26px)] border-t border-[var(--line)] sm:border-t-[var(--line-strong)]"
-                  >
-                    <div className={`${FONT_DISPLAY} italic font-medium text-[var(--brand)] text-[28px] leading-none`}>
-                      0{i + 1}
-                    </div>
-                    <div className="font-semibold text-[14.5px] tracking-[0.02em] text-[var(--ink)]">
-                      {s.title}
-                    </div>
-                    <p className="text-[13px] leading-[1.45] text-[var(--ink-soft)] m-0 max-w-[24ch]">
-                      {s.desc}
-                    </p>
-                  </li>
-                ))}
-              </ol>
-            </Reveal>
-
-            <Reveal className="mt-[clamp(36px,5vw,56px)] text-center">
-              <p className={`${FONT_MONO} text-[11.5px] tracking-[0.08em] uppercase text-[var(--ink-quiet)] m-0`}>
-                Identidade: 10 dias úteis. Aplicações: 10 dias úteis após
-                aprovação. Orçamento válido por 30 dias.
-              </p>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ═══ 6. QUEM É LETÍCIA ═══ (card mantido, foto vazando) */}
-        <section className="pt-[clamp(36px,5vw,60px)] pb-[clamp(56px,11vw,128px)]">
+        {/* ═══ 4. QUEM É LETÍCIA ═══ (card mantido, foto vazando) */}
+        <section className="pt-[clamp(48px,9vw,104px)] pb-[clamp(56px,10vw,120px)]">
           <div className={CONTAINER}>
             <Reveal className={HEAD_CENTER}>
               <div className={EYEBROW}>
@@ -333,15 +306,126 @@ export default function HomePage() {
 
               <Reveal delayMs={120} className="flex flex-col gap-[18px] max-w-[60ch]">
                 <p className="text-[16.5px] leading-[1.7] text-[var(--ink)] m-0">
-                  Letícia Aguiar é Diretora de Criação do Eliá. Publicitária com
-                  25 anos em marcas, foi sócia de uma agência de publicidade por
-                  12 anos antes de criar o estúdio. O nome Eliá vem do próprio
-                  nome: L de Letícia, A de Aguiar.
+                  Letícia Aguiar é Diretora de Criação do Eliá. Publicitária com 25 anos de experiência em
+                  ativação de marcas, especialista em marketing, foi sócia de uma agência de publicidade por
+                  12 anos antes de criar seu escritório. O nome Eliá vem da composição do próprio nome: L
+                  de Letícia, A de Aguiar.
+                </p>
+                <p className="text-[16.5px] leading-[1.7] text-[var(--ink)] m-0">
+                  Diretora de arte, redatora, diretora de criação e coordenadora de marketing ao longo da
+                  trajetória, hoje conduz o estúdio com a mesma premissa: traduzir a expectativa do cliente
+                  em uma experiência real, sempre além do que se esperava.
                 </p>
                 <p className="text-[16.5px] leading-[1.7] text-[var(--ink-soft)] m-0">
-                  O estúdio trabalha identidade visual aplicada, com atenção à
-                  produção: papel, acabamento, fornecedor. O acompanhamento
+                  O Eliá trabalha com identidade visual aplicada, com atenção específica à produção gráfica:
+                  papel, gramatura, acabamento, fornecedor. Empresa ou evento, o acompanhamento
                   continua mesmo após a identidade ser aprovada.
+                </p>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ 5. MANIFESTO ═══ Respiro contemplativo no meio. (mantido) */}
+        <section className="py-[clamp(64px,11vw,128px)] bg-[var(--surface)] border-t border-b border-[var(--line)]">
+          <div className={CONTAINER}>
+            <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-[clamp(32px,5vw,80px)] items-center">
+              <Reveal variant="photo">
+                <PhotoPlaceholder
+                  ratio="r-43"
+                  project="Laís e Carlos"
+                  type="Identidade aplicada"
+                  src={assetPath(`${PORTFOLIO_BASE}/casamentos/lais-e-carlos.webp`)}
+                  sizes="(max-width: 1024px) 100vw, 48vw"
+                />
+              </Reveal>
+              <Reveal delayMs={120} className="flex flex-col gap-5">
+                <div className={EYEBROW}>
+                  <span>A expectativa vira experiência</span>
+                </div>
+                <p className={`${FONT_DISPLAY} italic font-medium text-[clamp(26px,3.6vw,46px)] leading-[1.16] tracking-[-0.005em] text-[var(--ink)] m-0 text-balance`}>
+                  A expectativa é traduzir todo o espírito da sua marca em um
+                  projeto de identidade visual único e marcante.
+                </p>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══ 6. COMO FUNCIONA ═══ Etapas + Prazos, comprimido. */}
+        <section className="pt-[clamp(48px,9vw,104px)] pb-[clamp(56px,11vw,128px)]">
+          <div className={CONTAINER}>
+            <Reveal className={HEAD_CENTER}>
+              <div className={EYEBROW}>
+                <span>Como funciona</span>
+              </div>
+              <h2 className={H2}>Cinco etapas fundamentais.</h2>
+              <p className={LEDE_CENTER}>
+                O processo é o mesmo para empresas e para eventos, tornando a entrega mais
+                assertiva.
+              </p>
+            </Reveal>
+
+            <Reveal>
+              <ol className="grid grid-cols-1 gap-[2px] list-none p-0 m-0 sm:grid-cols-5">
+                {PROCESS_STEPS.map((s, i) => (
+                  <li
+                    key={i}
+                    className="flex flex-col items-center text-center gap-2 px-3 py-[clamp(18px,2.5vw,26px)] border-t border-[var(--line)] sm:border-t-[var(--line-strong)]"
+                  >
+                    <div className={`${FONT_DISPLAY} italic font-medium text-[var(--brand)] text-[28px] leading-none`}>
+                      0{i + 1}
+                    </div>
+                    <div className="font-semibold text-[14.5px] tracking-[0.02em] text-[var(--ink)]">
+                      {s.title}
+                    </div>
+                    <p className="text-[13px] leading-[1.45] text-[var(--ink-soft)] m-0 max-w-[24ch]">
+                      {s.desc}
+                    </p>
+                  </li>
+                ))}
+              </ol>
+            </Reveal>
+
+            <Reveal className="mt-[clamp(36px,5vw,56px)] text-center">
+              <p className={`${FONT_MONO} text-[11.5px] tracking-[0.08em] uppercase text-[var(--ink-quiet)] m-0`}>
+                Identidade: 10 dias úteis. Aplicações: 10 dias úteis após
+                aprovação. Orçamento válido por 30 dias.
+              </p>
+            </Reveal>
+
+            {/* Sub-bloco: Acompanhamento completo (copy aprovada pela cliente, jun/2026). */}
+            <div className="mt-[clamp(48px,7vw,88px)] grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-[clamp(32px,5vw,72px)] items-center">
+              <Reveal variant="photo">
+                <PhotoPlaceholder
+                  ratio="r-43"
+                  project="Caixa e tags"
+                  type="Material entregue"
+                  src={assetPath(`${PORTFOLIO_BASE}/produtos/caixa-e-tags/foto-01.webp`)}
+                  sizes="(max-width: 1024px) 100vw, 48vw"
+                />
+              </Reveal>
+              <Reveal delayMs={120} className="flex flex-col gap-[18px]">
+                <h3 className={`${FONT_DISPLAY} italic font-medium text-[clamp(28px,3.8vw,44px)] leading-[1.1] tracking-[-0.005em] m-0 text-balance`}>
+                  Acompanhamento completo.
+                </h3>
+                <p className="text-[var(--ink-soft)] text-[clamp(16px,1.7vw,19px)] leading-[1.6] text-pretty m-0">
+                  Antes e após a Identidade Visual ser aprovada, você não fica perdido.
+                </p>
+                <p className="text-[16.5px] leading-[1.7] text-[var(--ink)] m-0">
+                  Com o logotipo definido, você receberá os arquivos da sua identidade e as
+                  melhores dicas de como executá-la. Será orientado a respeito dos tipos de
+                  papéis e acabamentos, com indicação dos melhores fornecedores para dar vida
+                  ao projeto.
+                </p>
+                <p className="text-[16.5px] leading-[1.7] text-[var(--ink)] m-0">
+                  Uma identidade visual bem construída deve conversar entre si em todos os
+                  locais de contato, do Instagram à decoração do espaço físico e o material
+                  impresso.
+                </p>
+                <p className="text-[16.5px] leading-[1.7] text-[var(--ink)] m-0">
+                  O Eliá entende a importância desse acompanhamento e garante que a sua
+                  experiência será vivida da melhor forma.
                 </p>
               </Reveal>
             </div>
@@ -383,6 +467,9 @@ export default function HomePage() {
                 <div className={EYEBROW}>
                   <span>Estúdio</span>
                 </div>
+                <h3 className={`${FONT_DISPLAY} italic font-medium text-[clamp(22px,2.6vw,30px)] leading-[1.15] m-0 text-balance`}>
+                  {STUDIO_VISIT_TITLE}
+                </h3>
                 <TrackedLink
                   href={STUDIO_MAPS_URL}
                   target="_blank"
@@ -405,7 +492,7 @@ export default function HomePage() {
                   <span className="text-[15px] text-[var(--ink-soft)]">{STUDIO_CITY}</span>
                 </TrackedLink>
                 <p className="text-[14.5px] leading-[1.55] text-[var(--ink)] m-0">
-                  {STUDIO_SCHEDULING_NOTE}
+                  {STUDIO_VISIT_NOTE}
                 </p>
                 <div className="flex flex-col gap-2.5 pt-1">
                   <WALink

@@ -10,6 +10,7 @@ import {
 } from "@/components/landing/editorial-tokens";
 import { EditorialFooter } from "@/components/landing/EditorialFooter";
 import { EditorialLeadForm } from "@/components/landing/EditorialLeadForm";
+import { EventPortfolio } from "@/components/landing/EventPortfolio";
 import { FloatingWA } from "@/components/landing/FloatingWA";
 import { InlineWA } from "@/components/landing/InlineWA";
 import { OliverParallax } from "@/components/landing/OliverParallax";
@@ -25,8 +26,10 @@ import {
   STUDIO_ADDRESS,
   STUDIO_CITY,
   STUDIO_MAPS_URL,
-  STUDIO_SCHEDULING_NOTE,
+  STUDIO_VISIT_NOTE,
+  STUDIO_VISIT_TITLE,
 } from "@/lib/constants";
+import { getPortfolioEvents } from "@/lib/portfolio";
 import { assetPath } from "@/lib/utils";
 import { WHATSAPP_MESSAGES, whatsappLink } from "@/lib/whatsapp";
 
@@ -91,6 +94,8 @@ const EVENT_TYPES = ["Casamento", "15 anos", "Aniversário", "Outro evento socia
 
 // ─────────── page ───────────
 export default function EventosPage() {
+  const portfolioEvents = getPortfolioEvents();
+
   return (
     <div
       style={EDITORIAL_TOKENS}
@@ -147,12 +152,28 @@ export default function EventosPage() {
           </div>
 
           <OliverParallax images={PORTFOLIO_ITEMS} />
+
+          {/* Portfólio por evento: filtro + grid assimétrico + carrossel manual */}
+          <div className={`${CONTAINER} mt-[clamp(40px,6vw,72px)]`}>
+            <Reveal className={HEAD_CENTER}>
+              <div className={EYEBROW}>
+                <span>Explore por evento</span>
+              </div>
+              <h2 className={H2}>Cada evento, do convite à mesa.</h2>
+              <p className={LEDE_CENTER}>
+                Escolha um evento e veja todas as fotos entregues.
+              </p>
+            </Reveal>
+            <Reveal variant="photo">
+              <EventPortfolio events={portfolioEvents} page="/eventos" />
+            </Reveal>
+          </div>
         </section>
 
         <InlineWA
           section="portfolio"
           waHref={WA_HREF}
-          text="Algum dos projetos te lembrou o que você imagina? Vamos conversar."
+          text="Algum dos projetos inspirou você? Entre em contato e vamos conversar."
         />
 
         {/* ═══ 3. COMO FUNCIONA ═══ Entregáveis + Etapas + Prazos, comprimido. */}
@@ -258,6 +279,9 @@ export default function EventosPage() {
                 <div className={EYEBROW}>
                   <span>Estúdio</span>
                 </div>
+                <h3 className={`${FONT_DISPLAY} italic font-medium text-[clamp(22px,2.6vw,30px)] leading-[1.15] m-0 text-balance`}>
+                  {STUDIO_VISIT_TITLE}
+                </h3>
                 <TrackedLink
                   href={STUDIO_MAPS_URL}
                   target="_blank"
@@ -280,7 +304,7 @@ export default function EventosPage() {
                   <span className="text-[15px] text-[var(--ink-soft)]">{STUDIO_CITY}</span>
                 </TrackedLink>
                 <p className="text-[14.5px] leading-[1.55] text-[var(--ink)] m-0">
-                  {STUDIO_SCHEDULING_NOTE}
+                  {STUDIO_VISIT_NOTE}
                 </p>
                 <div className="flex flex-col gap-2.5 pt-1">
                   <WALink

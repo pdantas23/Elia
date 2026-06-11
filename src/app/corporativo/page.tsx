@@ -25,7 +25,8 @@ import {
   STUDIO_ADDRESS,
   STUDIO_CITY,
   STUDIO_MAPS_URL,
-  STUDIO_SCHEDULING_NOTE,
+  STUDIO_VISIT_NOTE,
+  STUDIO_VISIT_TITLE,
 } from "@/lib/constants";
 import { assetPath } from "@/lib/utils";
 import { WHATSAPP_MESSAGES, whatsappLink } from "@/lib/whatsapp";
@@ -137,7 +138,7 @@ export default function CorporativoPage() {
                 <span className="text-[var(--brand)]">do cartão à fachada.</span>
               </h1>
               <p className="text-[var(--ink-soft)] text-[clamp(16px,1.7vw,19px)] leading-[1.55] max-w-[48ch] text-pretty m-0">
-                Sem sistema, a empresa parece três empresas. A Eliá constrói o
+                Sem sistema, a empresa parece três empresas. O Eliá constrói o
                 padrão e acompanha a produção.
               </p>
               <div className="flex flex-wrap justify-center gap-[10px] mt-1">
@@ -179,7 +180,7 @@ export default function CorporativoPage() {
         <InlineWA
           section="portfolio"
           waHref={WA_HREF}
-          text="Algum dos projetos te lembrou o seu? Vamos conversar."
+          text="Algum dos projetos inspirou você? Entre em contato e vamos conversar."
         />
 
         {/* ═══ 3. COMO FUNCIONA ═══ Etapas primeiro, depois "O que você recebe" (carrossel). */}
@@ -271,6 +272,9 @@ export default function CorporativoPage() {
                 <div className={EYEBROW}>
                   <span>Estúdio</span>
                 </div>
+                <h3 className={`${FONT_DISPLAY} italic font-medium text-[clamp(22px,2.6vw,30px)] leading-[1.15] m-0 text-balance`}>
+                  {STUDIO_VISIT_TITLE}
+                </h3>
                 <TrackedLink
                   href={STUDIO_MAPS_URL}
                   target="_blank"
@@ -293,7 +297,7 @@ export default function CorporativoPage() {
                   <span className="text-[15px] text-[var(--ink-soft)]">{STUDIO_CITY}</span>
                 </TrackedLink>
                 <p className="text-[14.5px] leading-[1.55] text-[var(--ink)] m-0">
-                  {STUDIO_SCHEDULING_NOTE}
+                  {STUDIO_VISIT_NOTE}
                 </p>
                 <div className="flex flex-col gap-2.5 pt-1">
                   <WALink
