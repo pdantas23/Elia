@@ -24,13 +24,6 @@ const TIPO_OPTIONS = [
   { value: "outro", label: "Outro" },
 ];
 
-const PRAZO_OPTIONS = [
-  { value: "urgente", label: "Urgente" },
-  { value: "30_dias", label: "Até 30 dias" },
-  { value: "60_dias", label: "Até 60 dias" },
-  { value: "sem_pressa", label: "Sem pressa" },
-];
-
 const ORCAMENTO_OPTIONS = [
   { value: "ate_2k", label: "Até R$ 2.000" },
   { value: "2k_3k", label: "R$ 2.000 – R$ 3.000" },
@@ -66,7 +59,6 @@ export function LeadForm({
   });
 
   const tipoProjeto = watch("tipo_projeto");
-  const prazo = watch("prazo");
   const orcamento = watch("orcamento");
 
   const onSubmit = useCallback(
@@ -87,7 +79,7 @@ export function LeadForm({
           whatsapp: stripWhatsAppMask(data.whatsapp),
           email: data.email.trim().toLowerCase(),
           tipo_projeto: data.tipo_projeto,
-          prazo: data.prazo,
+          prazo: null,
           orcamento: data.orcamento ?? null,
           observacao: data.observacao?.trim() ?? null,
           origem_pagina: origemPagina,
@@ -214,18 +206,6 @@ export function LeadForm({
         label="Tipo de projeto"
         placeholder="Selecione"
         error={errors.tipo_projeto?.message}
-      />
-
-      {/* Prazo */}
-      <Dropdown
-        id="prazo"
-        name="prazo"
-        options={PRAZO_OPTIONS}
-        value={prazo}
-        onChange={(val) => setValue("prazo", val as LeadFormData["prazo"], { shouldValidate: true })}
-        label="Prazo"
-        placeholder="Selecione"
-        error={errors.prazo?.message}
       />
 
       {/* Orcamento */}

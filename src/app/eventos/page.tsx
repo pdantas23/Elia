@@ -1,4 +1,19 @@
 import type { Metadata } from "next";
+import {
+  BookOpen,
+  CalendarHeart,
+  Gift,
+  Handshake,
+  LayoutGrid,
+  Lightbulb,
+  Mail,
+  MessagesSquare,
+  PackageCheck,
+  PenTool,
+  Printer,
+  Stamp,
+  Wine,
+} from "lucide-react";
 
 import { CTAButton } from "@/components/landing/CTAButton";
 import {
@@ -13,14 +28,13 @@ import { EditorialLeadForm } from "@/components/landing/EditorialLeadForm";
 import { EventPortfolio } from "@/components/landing/EventPortfolio";
 import { FloatingWA } from "@/components/landing/FloatingWA";
 import { InlineWA } from "@/components/landing/InlineWA";
-import { OliverParallax } from "@/components/landing/OliverParallax";
-import { ParallaxY } from "@/components/landing/ParallaxY";
-import { PhotoCarousel } from "@/components/landing/PhotoCarousel";
+import { PhotoCue, PhotoReveal } from "@/components/landing/PhotoReveal";
 import { PhotoPlaceholder } from "@/components/landing/PhotoPlaceholder";
 import { Reveal } from "@/components/landing/Reveal";
 import { TrackedLink } from "@/components/landing/TrackedLink";
 import { Topbar } from "@/components/landing/Topbar";
 import { WAButton } from "@/components/landing/WAButton";
+import { StudioMapCard } from "@/components/landing/StudioMapCard";
 import { WALink } from "@/components/landing/WALink";
 import {
   STUDIO_ADDRESS,
@@ -34,11 +48,11 @@ import { assetPath } from "@/lib/utils";
 import { WHATSAPP_MESSAGES, whatsappLink } from "@/lib/whatsapp";
 
 export const metadata: Metadata = {
-  title: "Identidade para Eventos",
+  title: "Identidade Festiva",
   description:
     "Identidade visual construída do zero para o seu evento: convite, papelaria, sinalização. Sem pacote pronto, sem template adaptado.",
   openGraph: {
-    title: "Identidade para Eventos | Eliá Identidade Visual",
+    title: "Identidade Festiva | Eliá Identidade Visual",
     description:
       "Identidade visual construída do zero para o seu evento: convite, papelaria, sinalização. Sem pacote pronto, sem template adaptado.",
   },
@@ -58,36 +72,26 @@ const LEDE_CENTER =
 
 // ─────────── section data ───────────
 const PORTFOLIO_BASE = "/images/portfolio";
-const PORTFOLIO_ITEMS: Array<{ project: string; type: string; src?: string }> = [
-  { project: "Andressa e Rafael", type: "Casamento", src: assetPath(`${PORTFOLIO_BASE}/casamentos/andressa-e-rafael.webp`) },
-  { project: "Gilian e Caíque", type: "Casamento", src: assetPath(`${PORTFOLIO_BASE}/casamentos/gilian-e-caique.webp`) },
-  { project: "Nádia e Daniel", type: "Casamento", src: assetPath(`${PORTFOLIO_BASE}/casamentos/nadia-e-daniel.webp`) },
-  { project: "Nádia e Daniel", type: "Convite · Papelaria", src: assetPath(`${PORTFOLIO_BASE}/produtos/convite-nadia-e-daniel.webp`) },
-  { project: "Laís e Carlos", type: "Casamento", src: assetPath(`${PORTFOLIO_BASE}/casamentos/lais-e-carlos.webp`) },
-  { project: "Lícia, 40 anos", type: "Aniversário", src: assetPath(`${PORTFOLIO_BASE}/aniversarios/licia-40.webp`) },
-  { project: "Felipe", type: "Batizado", src: assetPath(`${PORTFOLIO_BASE}/batizados/felipe.webp`) },
-  { project: "Mais um florescer", type: "Lembrança", src: assetPath(`${PORTFOLIO_BASE}/produtos/caixa-mais-um-florescer.webp`) },
-];
 
 // Entregáveis (Identidade Visual Festiva). Curtos, máx. 8 palavras.
 const INCLUDED_ITEMS = [
-  "Monograma",
-  "Manual de aplicação",
-  "Convites impressos e digital",
-  "Menu de buffet e drinks",
-  "Brindes personalizados",
-  "Estampa exclusiva",
-  "Save the date",
-  "Consultoria de produção",
+  { icon: PenTool, label: "Monograma" },
+  { icon: BookOpen, label: "Manual de aplicação" },
+  { icon: Mail, label: "Convites impressos e digital" },
+  { icon: Wine, label: "Menu de buffet e drinks" },
+  { icon: Gift, label: "Brindes personalizados" },
+  { icon: Stamp, label: "Estampa exclusiva" },
+  { icon: CalendarHeart, label: "Save the date" },
+  { icon: Handshake, label: "Consultoria de produção" },
 ];
 
 // Etapas. Descrição máx. 12 palavras.
 const PROCESS_STEPS = [
-  { title: "Briefing", desc: "Entender o casal, a história e o tom do evento." },
-  { title: "Conceito", desc: "Paleta, tipografia e a razão de cada escolha." },
-  { title: "Aplicação", desc: "Convite, menu, sinalização e lembrança ganham forma." },
-  { title: "Execução", desc: "Papel e fornecedor definidos, produção acompanhada de perto." },
-  { title: "Entrega", desc: "O material chega na sua mão para o dia." },
+  { icon: MessagesSquare, title: "Briefing", desc: "Entender o casal, a história e o tom do evento." },
+  { icon: Lightbulb, title: "Conceito", desc: "Paleta, tipografia e a razão de cada escolha." },
+  { icon: LayoutGrid, title: "Aplicação", desc: "Convite, menu, sinalização e lembrança ganham forma." },
+  { icon: Printer, title: "Execução", desc: "Papel e fornecedor definidos, produção acompanhada de perto." },
+  { icon: PackageCheck, title: "Entrega", desc: "O material chega na sua mão para o dia." },
 ];
 
 const EVENT_TYPES = ["Casamento", "15 anos", "Aniversário", "Outro evento social"];
@@ -101,73 +105,81 @@ export default function EventosPage() {
       style={EDITORIAL_TOKENS}
       className={`${FONT_UI} bg-[var(--bg)] text-[var(--ink)] min-h-[100dvh] overflow-x-clip text-[16px] leading-[1.6] tracking-[0.005em] [scroll-behavior:smooth]`}
     >
-      <Topbar />
+      <Topbar
+        sections={[
+          { label: "Portfólio", href: "#portfolio" },
+          { label: "Como funciona", href: "#como-funciona" },
+          { label: "Como o projeto acontece", href: "#como-acontece" },
+          { label: "Contato", href: "#contato" },
+        ]}
+      />
       <main>
-        {/* ═══ 1. HERO ═══ Carrossel + parallax sutil. Carrossel por último (mobile e desktop). */}
-        <section className="relative bg-[var(--surface)] overflow-x-clip pt-[clamp(32px,4vw,44px)] pb-[clamp(48px,7vw,96px)] flex flex-col gap-[clamp(32px,5vw,60px)]">
-          <div className={`${CONTAINER} relative w-full`}>
-            <Reveal className="flex flex-col items-center text-center gap-[clamp(16px,2vw,24px)] max-w-[900px] mx-auto">
-              <h1
-                className={`${FONT_DISPLAY} italic font-medium text-[clamp(34px,5.8vw,68px)] leading-[1.04] tracking-[-0.012em] m-0 text-balance`}
-              >
-                Cada peça pensada,{" "}
-                <span className="text-[var(--brand)]">cada detalhe entregue.</span>
-              </h1>
-              <p className="text-[var(--ink-soft)] text-[clamp(16px,1.7vw,19px)] leading-[1.55] max-w-[46ch] text-pretty m-0">
-                Identidade visual construída do zero para o seu evento. Sem
-                pacote pronto.
-              </p>
-              <div className="flex flex-wrap justify-center gap-[10px] mt-1">
-                <WAButton href={WA_HREF} section="hero" />
-                <CTAButton
-                  href="#contato"
-                  label="Solicitar orçamento"
-                  destination="form"
-                  section="hero"
-                />
-              </div>
-            </Reveal>
-          </div>
+        {/* ═══ 1. HERO ═══ Texto + botões centralizados; card de foto. Empilha no mobile. */}
+        <section className="bg-[var(--surface)] border-b border-[var(--line)] py-[clamp(40px,7vw,96px)]">
+          <div className={CONTAINER}>
+            <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-[clamp(32px,5vw,72px)] items-center">
+              <Reveal className="flex flex-col items-center text-center gap-[clamp(18px,2.4vw,26px)]">
+                <h1
+                  className={`${FONT_DISPLAY} italic font-medium text-[clamp(34px,5.8vw,68px)] leading-[1.04] tracking-[-0.012em] m-0 text-balance`}
+                >
+                  A sua festa terá{" "}
+                  <span className="text-[var(--brand)]">uma personalidade única.</span>
+                </h1>
+                <p className="text-[var(--ink-soft)] text-[clamp(16px,1.7vw,19px)] leading-[1.55] max-w-[46ch] text-pretty m-0">
+                  Identidade visual construída do zero para cada evento, para
+                  contar a sua história em cada detalhe.
+                </p>
+                <div className="flex flex-wrap justify-center gap-[10px] mt-1">
+                  <WAButton href={WA_HREF} section="hero" />
+                  <CTAButton
+                    href="#contato"
+                    label="Solicitar orçamento"
+                    destination="form"
+                    section="hero"
+                  />
+                </div>
+              </Reveal>
 
-          {/* Carrossel automático com parallax vertical sutil */}
-          <Reveal variant="photo">
-            <ParallaxY offset={40}>
-              <PhotoCarousel items={PORTFOLIO_ITEMS} />
-            </ParallaxY>
-          </Reveal>
+              <Reveal
+                variant="photo"
+                className="w-full max-w-[440px] mx-auto lg:mx-0 lg:ml-auto"
+              >
+                <figure className="m-0 rounded-[2px] bg-[var(--bg)] border border-[var(--line)]">
+                  <div className="m-[clamp(10px,1.4vw,16px)] border border-[var(--line-strong)] p-[clamp(10px,1.4vw,16px)]">
+                    <div className="relative aspect-[4/5] overflow-hidden">
+                      <PhotoPlaceholder
+                        project="Lorena e Salomão"
+                        type="Convite impresso"
+                        src={assetPath("/images/hero/eventos-convite-lorena-salomao.webp")}
+                        alt="Convite de casamento impresso ao lado da sacola personalizada do Eliá"
+                        priority
+                        sizes="(max-width: 1024px) 100vw, 440px"
+                      />
+                    </div>
+                  </div>
+                </figure>
+              </Reveal>
+            </div>
+          </div>
         </section>
 
-        {/* ═══ 2. PORTFÓLIO ═══ Protagonista. Parallax em colunas (Olivier Larose). */}
-        <section id="portfolio" className="pt-[clamp(16px,4vw,48px)]">
+        {/* ═══ 2. PORTFÓLIO ═══ Explore por evento. */}
+        <section id="portfolio" className="scroll-mt-[clamp(80px,12vw,110px)] pt-[clamp(16px,4vw,48px)]">
+          {/* Portfólio por evento: carrossel de capas; clicar abre o álbum no lightbox */}
           <div className={CONTAINER}>
-            <Reveal className={HEAD_CENTER}>
-              <div className={EYEBROW}>
-                <span>Projetos executados</span>
-              </div>
-              <h2 className={H2}>Convidado que viu, abriu, guardou.</h2>
-              <p className={LEDE_CENTER}>
-                Eventos com identidade aplicada. Só o que foi entregue.
-              </p>
-            </Reveal>
-          </div>
-
-          <OliverParallax images={PORTFOLIO_ITEMS} />
-
-          {/* Portfólio por evento: filtro + grid assimétrico + carrossel manual */}
-          <div className={`${CONTAINER} mt-[clamp(40px,6vw,72px)]`}>
             <Reveal className={HEAD_CENTER}>
               <div className={EYEBROW}>
                 <span>Explore por evento</span>
               </div>
-              <h2 className={H2}>Cada evento, do convite à mesa.</h2>
+              <h2 className={H2}>Uma experiência completa, da entrega do convite à decoração da mesa.</h2>
               <p className={LEDE_CENTER}>
-                Escolha um evento e veja todas as fotos entregues.
+                Toque nas imagens para abrir os álbuns.
               </p>
             </Reveal>
-            <Reveal variant="photo">
-              <EventPortfolio events={portfolioEvents} page="/eventos" />
-            </Reveal>
           </div>
+          <Reveal variant="photo">
+            <EventPortfolio events={portfolioEvents} page="/eventos" />
+          </Reveal>
         </section>
 
         <InlineWA
@@ -176,20 +188,22 @@ export default function EventosPage() {
           text="Algum dos projetos inspirou você? Entre em contato e vamos conversar."
         />
 
-        {/* ═══ 3. COMO FUNCIONA ═══ Entregáveis + Etapas + Prazos, comprimido. */}
-        <section className="py-[clamp(48px,9vw,104px)]">
+        {/* ═══ 3. COMO FUNCIONA ═══ O que vem no pacote (entregáveis). */}
+        <section
+          id="como-funciona"
+          className="scroll-mt-[clamp(80px,12vw,110px)] py-[clamp(48px,9vw,104px)]"
+        >
           <div className={CONTAINER}>
             <Reveal className={HEAD_CENTER}>
               <div className={EYEBROW}>
                 <span>Como funciona</span>
               </div>
-              <h2 className={H2}>Do monograma à mesa.</h2>
+              <h2 className={H2}>Sua festa vai além do monograma.</h2>
               <p className={LEDE_CENTER}>
-                O que vem no pacote e como o projeto acontece.
+                O que é entregue no pacote da Identidade Festiva.
               </p>
             </Reveal>
 
-            {/* Bloco 1: Entregáveis */}
             <Reveal variant="photo" className="mx-auto mb-[clamp(28px,4vw,44px)] max-w-[560px]">
               <PhotoPlaceholder
                 ratio="r-32"
@@ -199,45 +213,72 @@ export default function EventosPage() {
                 sizes="(max-width: 640px) 100vw, 560px"
               />
             </Reveal>
-            <Reveal className="grid grid-cols-2 gap-x-[clamp(16px,3vw,32px)] gap-y-[clamp(20px,3vw,32px)] sm:grid-cols-4">
-              {INCLUDED_ITEMS.map((item, i) => (
-                <div key={i} className="flex flex-col items-center text-center gap-1.5">
-                  <span className={`${FONT_MONO} text-[11px] tracking-[0.16em] text-[var(--brand)]`}>
-                    0{i + 1}
-                  </span>
-                  <p className="text-[14.5px] leading-[1.3] text-[var(--ink)] m-0 max-w-[18ch]">
-                    {item}
-                  </p>
-                </div>
-              ))}
+            <Reveal className="grid grid-cols-2 gap-x-[clamp(16px,3vw,32px)] gap-y-[clamp(20px,3vw,28px)] sm:grid-cols-4">
+              {INCLUDED_ITEMS.map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <PhotoReveal
+                    key={i}
+                    label={item.label}
+                    className="flex flex-col items-center text-center gap-2.5 rounded-[3px] p-2 transition-colors hover:bg-[var(--surface)]"
+                  >
+                    <Icon className="text-[var(--brand)] transition-transform duration-200 group-hover:scale-110" size={26} strokeWidth={1.4} aria-hidden="true" />
+                    <p className="text-[14.5px] leading-[1.3] text-[var(--ink)] m-0 max-w-[18ch]">
+                      {item.label}
+                      <PhotoCue className="ml-[4px]" />
+                    </p>
+                  </PhotoReveal>
+                );
+              })}
             </Reveal>
+          </div>
+        </section>
 
-            {/* Bloco 2: Etapas (stepper) */}
-            <Reveal className="mt-[clamp(48px,7vw,80px)]">
-              <div className={`${EYEBROW} mx-auto w-full justify-center mb-[clamp(20px,3vw,32px)]`}>
+        {/* ═══ 4. COMO O PROJETO ACONTECE ═══ Etapas + Prazos. */}
+        <section
+          id="como-acontece"
+          className="scroll-mt-[clamp(80px,12vw,110px)] bg-[var(--surface)] border-t border-b border-[var(--line)] py-[clamp(48px,9vw,104px)]"
+        >
+          <div className={CONTAINER}>
+            <Reveal className={HEAD_CENTER}>
+              <div className={EYEBROW}>
                 <span>Como o projeto acontece</span>
               </div>
+              <h2 className={H2}>Do briefing ao dia do evento.</h2>
+              <p className={LEDE_CENTER}>
+                Como o projeto acontece, desde o primeiro contato.
+              </p>
+            </Reveal>
+
+            <Reveal>
               <ol className="grid grid-cols-1 gap-[2px] list-none p-0 m-0 sm:grid-cols-5">
-                {PROCESS_STEPS.map((s, i) => (
-                  <li
-                    key={i}
-                    className="flex flex-col items-center text-center gap-2 px-3 py-[clamp(18px,2.5vw,26px)] border-t border-[var(--line)] sm:border-t-[var(--line-strong)]"
-                  >
-                    <div className={`${FONT_DISPLAY} italic font-medium text-[var(--brand)] text-[28px] leading-none`}>
-                      0{i + 1}
-                    </div>
-                    <div className="font-semibold text-[14.5px] tracking-[0.02em] text-[var(--ink)]">
-                      {s.title}
-                    </div>
-                    <p className="text-[13px] leading-[1.45] text-[var(--ink-soft)] m-0 max-w-[24ch]">
-                      {s.desc}
-                    </p>
-                  </li>
-                ))}
+                {PROCESS_STEPS.map((s, i) => {
+                  const Icon = s.icon;
+                  return (
+                    <li
+                      key={i}
+                      className="border-t border-[var(--line)] sm:border-t-[var(--line-strong)]"
+                    >
+                      <PhotoReveal
+                        label={s.title}
+                        className="flex h-full w-full flex-col items-center text-center gap-2 px-3 py-[clamp(18px,2.5vw,26px)] transition-colors hover:bg-[var(--surface)]"
+                      >
+                        <Icon className="text-[var(--brand)] transition-transform duration-200 group-hover:scale-110" size={26} strokeWidth={1.5} aria-hidden="true" />
+                        <div className="font-semibold text-[14.5px] tracking-[0.02em] text-[var(--ink)]">
+                          {s.title}
+                          <PhotoCue className="ml-[5px]" />
+                        </div>
+                        <p className="text-[13px] leading-[1.45] text-[var(--ink-soft)] m-0 max-w-[24ch]">
+                          {s.desc}
+                        </p>
+                      </PhotoReveal>
+                    </li>
+                  );
+                })}
               </ol>
             </Reveal>
 
-            {/* Bloco 3: Prazos (linha discreta) */}
+            {/* Prazos (linha discreta) */}
             <Reveal className="mt-[clamp(36px,5vw,56px)] text-center">
               <p className={`${FONT_MONO} text-[11.5px] tracking-[0.08em] uppercase text-[var(--ink-quiet)] m-0`}>
                 Identidade: 10 dias úteis. Aplicações: 10 dias úteis após
@@ -247,10 +288,10 @@ export default function EventosPage() {
           </div>
         </section>
 
-        {/* ═══ 4. CONTATO ═══ Formulário + Estúdio fundidos. */}
+        {/* ═══ 5. CONTATO ═══ Formulário + Estúdio fundidos. */}
         <section
           id="contato"
-          className="bg-[var(--surface)] border-t border-b border-[var(--line)] py-[clamp(56px,10vw,120px)]"
+          className="scroll-mt-[clamp(80px,12vw,110px)] bg-[var(--surface)] border-t border-b border-[var(--line)] py-[clamp(56px,10vw,120px)]"
         >
           <div className={CONTAINER}>
             <Reveal className={HEAD_CENTER}>
@@ -272,12 +313,14 @@ export default function EventosPage() {
                   projectTypes={EVENT_TYPES}
                   projectTypeLabel="Tipo de evento"
                   defaultProjectType="Casamento"
+                  showBudgetField={false}
+                  showNotesField={false}
                 />
               </Reveal>
 
               <Reveal delayMs={120} className="flex flex-col gap-[clamp(18px,2.4vw,26px)] lg:pt-2">
                 <div className={EYEBROW}>
-                  <span>Estúdio</span>
+                  <span>Escritório</span>
                 </div>
                 <h3 className={`${FONT_DISPLAY} italic font-medium text-[clamp(22px,2.6vw,30px)] leading-[1.15] m-0 text-balance`}>
                   {STUDIO_VISIT_TITLE}
@@ -303,6 +346,7 @@ export default function EventosPage() {
                   </span>
                   <span className="text-[15px] text-[var(--ink-soft)]">{STUDIO_CITY}</span>
                 </TrackedLink>
+                <StudioMapCard />
                 <p className="text-[14.5px] leading-[1.55] text-[var(--ink)] m-0">
                   {STUDIO_VISIT_NOTE}
                 </p>

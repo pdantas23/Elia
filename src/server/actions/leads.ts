@@ -31,7 +31,7 @@ export async function createLead(input: CreateLeadInput) {
     whatsapp: stripWhatsAppMask(data.whatsapp),
     email: data.email.trim().toLowerCase(),
     tipo_projeto: data.tipo_projeto,
-    prazo: data.prazo,
+    prazo: null,
     orcamento: data.orcamento ?? null,
     observacao: data.observacao?.trim() ?? null,
     origem_pagina: input.origem_pagina as LeadInsert["origem_pagina"],

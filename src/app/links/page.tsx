@@ -5,8 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod/v4";
 import { Manrope, Cormorant_Garamond } from "next/font/google";
-import { leadFormSchema, type LeadFormData, stripWhatsAppMask } from "@/lib/validators/lead";
+import { leadFormSchema, stripWhatsAppMask } from "@/lib/validators/lead";
 import { createClient } from "@/lib/supabase/client";
 import { trackEvent, trackWhatsAppClick } from "@/lib/tracking";
 import { getStoredUtms } from "@/lib/tracking/utms";
@@ -35,6 +36,15 @@ const cormorantBio = Cormorant_Garamond({
 
 const WHATSAPP_URL = whatsappLink(WHATSAPP_MESSAGES.default);
 
+// Formulário enxuto da bio: só nome, whatsapp, e-mail e tipo de projeto.
+const bioFormSchema = leadFormSchema.pick({
+  nome: true,
+  whatsapp: true,
+  email: true,
+  tipo_projeto: true,
+});
+type BioFormData = z.infer<typeof bioFormSchema>;
+
 type LinkItem = {
   key: "home" | "corporativo" | "eventos" | "whatsapp" | "orcamento" | "pinterest";
   label: string;
@@ -54,7 +64,7 @@ const LINKS: LinkItem[] = [
   {
     key: "corporativo",
     label: "Identidade corporativa",
-    meta: "Marcas, papelaria, sistemas visuais",
+    meta: "Marcas, papelaria e ativação",
     href: "/corporativo",
   },
   {
@@ -138,9 +148,7 @@ export default function BioPage() {
               className="bio-tagline bio-rise"
               style={{ animationDelay: "240ms" }}
             >
-              Identidade visual aplicada.
-              <br />
-              Do conceito ao material entregue.
+              Identidade Visual além da expectativa.
             </p>
           </div>
 
@@ -233,7 +241,7 @@ export default function BioPage() {
             >
               <span>
                 Agendar visita
-                <span className="bio-link-meta">Estúdio em Teresina, PI</span>
+                <span className="bio-link-meta">Escritório em Teresina, PI</span>
               </span>
               <span className="bio-arrow" aria-hidden="true">
                 ↗
@@ -274,28 +282,10 @@ function maskPhone(v: string): string {
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
 }
 
-const PROJETO_OPTIONS: Array<{ value: LeadFormData["tipo_projeto"]; label: string }> = [
+const PROJETO_OPTIONS: Array<{ value: BioFormData["tipo_projeto"]; label: string }> = [
   { value: "corporativo", label: "Corporativo" },
   { value: "evento", label: "Evento" },
   { value: "outro", label: "Outro" },
-];
-
-const PRAZO_OPTIONS: Array<{ value: LeadFormData["prazo"]; label: string }> = [
-  { value: "urgente", label: "Urgente" },
-  { value: "30_dias", label: "Em 30 dias" },
-  { value: "60_dias", label: "Em 60 dias" },
-  { value: "sem_pressa", label: "Sem pressa" },
-];
-
-const ORCAMENTO_OPTIONS: Array<{
-  value: NonNullable<LeadFormData["orcamento"]>;
-  label: string;
-}> = [
-  { value: "ate_2k", label: "Até R$ 2.000" },
-  { value: "2k_3k", label: "R$ 2.000 – R$ 3.000" },
-  { value: "3k_5k", label: "R$ 3.000 – R$ 5.000" },
-  { value: "acima_5k", label: "Acima de R$ 5.000" },
-  { value: "nao_definido", label: "Ainda não defini" },
 ];
 
 function BudgetModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -308,8 +298,8 @@ function BudgetModal({ open, onClose }: { open: boolean; onClose: () => void }) 
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<LeadFormData>({
-    resolver: zodResolver(leadFormSchema),
+  } = useForm<BioFormData>({
+    resolver: zodResolver(bioFormSchema),
   });
 
   const { ref: registerNomeRef, ...registerNomeRest } = register("nome");
@@ -322,7 +312,7 @@ function BudgetModal({ open, onClose }: { open: boolean; onClose: () => void }) 
   }, [open]);
 
   const onSubmit = useCallback(
-    async (data: LeadFormData) => {
+    async (data: BioFormData) => {
       trackEvent({ name: "form_submit_attempt", page: "/bio", section: "final" });
       const utms = getStoredUtms();
       const supabase = createClient();
@@ -333,9 +323,9 @@ function BudgetModal({ open, onClose }: { open: boolean; onClose: () => void }) 
           whatsapp: stripWhatsAppMask(data.whatsapp),
           email: data.email.trim().toLowerCase(),
           tipo_projeto: data.tipo_projeto,
-          prazo: data.prazo,
-          orcamento: data.orcamento ?? null,
-          observacao: undefined,
+          prazo: null,
+          orcamento: null,
+          observacao: null,
           origem_pagina: "/bio",
           origem_secao: "final",
           utm_source: utms.utm_source ?? null,
@@ -474,85 +464,28 @@ function BudgetModal({ open, onClose }: { open: boolean; onClose: () => void }) 
                 </div>
               </div>
 
-              <div className="bio-field-row">
-                <div className={"bio-field" + (errors.tipo_projeto ? " error" : "")}>
-                  <label className="bio-label" htmlFor="bio-proj">
-                    Tipo de projeto
-                  </label>
-                  <select
-                    id="bio-proj"
-                    className="bio-select"
-                    defaultValue=""
-                    {...register("tipo_projeto")}
-                  >
-                    <option value="" disabled>
-                      Selecionar
-                    </option>
-                    {PROJETO_OPTIONS.map((o) => (
-                      <option key={o.value} value={o.value}>
-                        {o.label}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.tipo_projeto && (
-                    <span className="bio-err">{errors.tipo_projeto.message}</span>
-                  )}
-                </div>
-                <div className={"bio-field" + (errors.prazo ? " error" : "")}>
-                  <label className="bio-label" htmlFor="bio-prazo">
-                    Prazo
-                  </label>
-                  <select
-                    id="bio-prazo"
-                    className="bio-select"
-                    defaultValue=""
-                    {...register("prazo")}
-                  >
-                    <option value="" disabled>
-                      Selecionar
-                    </option>
-                    {PRAZO_OPTIONS.map((o) => (
-                      <option key={o.value} value={o.value}>
-                        {o.label}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.prazo && (
-                    <span className="bio-err">{errors.prazo.message}</span>
-                  )}
-                </div>
-              </div>
-
-              <div className="bio-field">
-                <label className="bio-label" htmlFor="bio-orc">
-                  Orçamento <span className="bio-opt">opcional</span>
+              <div className={"bio-field" + (errors.tipo_projeto ? " error" : "")}>
+                <label className="bio-label" htmlFor="bio-proj">
+                  Tipo de projeto
                 </label>
                 <select
-                  id="bio-orc"
+                  id="bio-proj"
                   className="bio-select"
                   defaultValue=""
-                  {...register("orcamento")}
+                  {...register("tipo_projeto")}
                 >
-                  <option value="">Prefiro não dizer</option>
-                  {ORCAMENTO_OPTIONS.map((o) => (
+                  <option value="" disabled>
+                    Selecionar
+                  </option>
+                  {PROJETO_OPTIONS.map((o) => (
                     <option key={o.value} value={o.value}>
                       {o.label}
                     </option>
                   ))}
                 </select>
-              </div>
-
-              <div className="bio-field">
-                <label className="bio-label" htmlFor="bio-obs">
-                  Observação <span className="bio-opt">opcional</span>
-                </label>
-                <textarea
-                  id="bio-obs"
-                  className="bio-textarea"
-                  rows={3}
-                  placeholder="Conta um pouco sobre o projeto, referências, datas-chave…"
-                  {...register("observacao")}
-                />
+                {errors.tipo_projeto && (
+                  <span className="bio-err">{errors.tipo_projeto.message}</span>
+                )}
               </div>
 
               <button className="bio-submit" type="submit" disabled={isSubmitting}>

@@ -17,68 +17,20 @@ export type PortfolioEvent = {
   category: string;
   /** Singular, vai no card (ex.: "Casamento"). */
   categoryLabel: string;
-  /** Plural, vai no chip de filtro (ex.: "Casamentos"). */
+  /** Plural (mantido por compatibilidade). */
   filterLabel: string;
   /** Já resolvidas via assetPath, em ordem. */
   photos: string[];
 };
 
 /**
- * Portfólio por evento com filtro de categoria.
- * - Cards no mesmo estilo do carrossel do hero (PhotoPlaceholder), maiores.
- * - Grid de 12 colunas com spans variados (antissimetria) mas gap e largura
- *   total de cada linha fixos: cards da mesma linha compartilham a altura.
- * - Clique no card abre um carrossel manual com as fotos do evento.
+ * Portfólio em carrossel automático: rola sozinho (scroll nativo + requestAnimationFrame),
+ * com loop contínuo via lista duplicada. Pausa no hover, no toque e enquanto o
+ * lightbox está aberto; o usuário também pode arrastar/deslizar. Clicar numa capa
+ * abre o álbum daquele evento / identidade corporativa no lightbox.
+ * Scroll nativo garante que o lazy-load do next/image funcione sem sumir/trocar fotos.
+ * Respeita `prefers-reduced-motion` (sem auto-rolagem; segue rolável à mão).
  */
-
-// Linhas do padrão assimétrico (somam 12). Cicladas conforme a lista filtrada.
-const DESKTOP_ROWS = [[7, 5], [4, 8], [6, 6], [8, 4], [5, 7], [4, 4, 4]] as const;
-const MOBILE_ROWS = [[12], [7, 5], [12], [5, 7]] as const;
-
-const SPAN_DESKTOP: Record<number, string> = {
-  4: "sm:col-span-4",
-  5: "sm:col-span-5",
-  6: "sm:col-span-6",
-  7: "sm:col-span-7",
-  8: "sm:col-span-8",
-  12: "sm:col-span-12",
-};
-const SPAN_MOBILE: Record<number, string> = {
-  5: "col-span-5",
-  7: "col-span-7",
-  12: "col-span-12",
-};
-
-// Altura por linha (alterna duas variantes). Mesma linha = mesma altura.
-const HEIGHT_DESKTOP = [
-  "sm:h-[clamp(300px,32vw,460px)]",
-  "sm:h-[clamp(340px,37vw,530px)]",
-] as const;
-const HEIGHT_MOBILE = [
-  "h-[clamp(220px,58vw,330px)]",
-  "h-[clamp(190px,48vw,280px)]",
-] as const;
-
-type CellLayout = { span: number; row: number };
-
-/** Distribui os cards pelas linhas do padrão; a última linha sempre fecha em 12. */
-function layoutCells(count: number, rows: ReadonlyArray<readonly number[]>): CellLayout[] {
-  const cells: CellLayout[] = [];
-  let i = 0;
-  let rowIdx = 0;
-  while (i < count) {
-    const remaining = count - i;
-    let row: readonly number[] = rows[rowIdx % rows.length] ?? [12];
-    if (remaining < row.length) row = remaining === 1 ? [12] : [7, 5];
-    for (const span of row.slice(0, remaining)) {
-      cells.push({ span, row: rowIdx });
-      i++;
-    }
-    rowIdx++;
-  }
-  return cells;
-}
-
 export function EventPortfolio({
   events,
   page,
@@ -86,82 +38,108 @@ export function EventPortfolio({
   events: PortfolioEvent[];
   page: string;
 }) {
-  const [filter, setFilter] = useState<string | null>(null);
   const [active, setActive] = useState<PortfolioEvent | null>(null);
+  const scrollRef = useRef<HTMLUListElement>(null);
+  const pausedRef = useRef(false);
+  // Acumulador em float: somar <1px direto no scrollLeft (inteiro em alguns
+  // navegadores) trava o avanço. Mantemos a posição aqui e escrevemos no scroll.
+  const posRef = useRef(0);
 
-  const filters = events.reduce<Array<{ category: string; label: string }>>(
-    (acc, e) =>
-      acc.some((f) => f.category === e.category)
-        ? acc
-        : [...acc, { category: e.category, label: e.filterLabel }],
-    [],
-  );
-  const visible = filter ? events.filter((e) => e.category === filter) : events;
-  const mobile = layoutCells(visible.length, MOBILE_ROWS);
-  const desktop = layoutCells(visible.length, DESKTOP_ROWS);
+  // Pausa o avanço automático enquanto o lightbox está aberto.
+  useEffect(() => {
+    pausedRef.current = active !== null;
+  }, [active]);
+
+  // Avanço automático contínuo. Ao passar da metade (lista duplicada), volta
+  // sem corte, pois as duas metades são idênticas.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const step = () => {
+      if (el.scrollWidth > el.clientWidth) {
+        if (pausedRef.current) {
+          // Mantém o acumulador sincronizado com o scroll manual do usuário.
+          posRef.current = el.scrollLeft;
+        } else {
+          const half = el.scrollWidth / 2;
+          posRef.current += 0.8;
+          if (posRef.current >= half) posRef.current -= half;
+          el.scrollLeft = posRef.current;
+        }
+      }
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   if (events.length === 0) return null;
 
-  return (
-    <div>
-      {/* ─── Filtro ─── */}
-      <div
-        role="group"
-        aria-label="Filtrar portfólio por tipo de evento"
-        className="flex flex-wrap justify-center gap-[8px] mb-[clamp(24px,3.5vw,40px)]"
-      >
-        {[{ category: null as string | null, label: "Todos" }, ...filters].map((f) => {
-          const isActive = filter === f.category;
-          return (
-            <button
-              key={f.label}
-              type="button"
-              aria-pressed={isActive}
-              onClick={() => setFilter(f.category)}
-              className={`${FONT_MONO} cursor-pointer rounded-[5px] border px-[14px] py-[9px] text-[11px] uppercase tracking-[0.16em] transition-colors duration-200 ${
-                isActive
-                  ? "border-[var(--ink)] bg-[var(--ink)] text-[var(--surface)]"
-                  : "border-[var(--line-strong)] bg-transparent text-[var(--ink-soft)] hover:border-[var(--ink)] hover:text-[var(--ink)]"
-              }`}
-            >
-              {f.label}
-            </button>
-          );
-        })}
-      </div>
+  // Lista duplicada para o loop contínuo e sem corte.
+  const loop = [...events, ...events];
+  const pause = () => {
+    pausedRef.current = true;
+  };
+  const resume = () => {
+    pausedRef.current = active !== null;
+  };
 
-      {/* ─── Grid assimétrico ─── */}
-      <div className="grid grid-cols-12 gap-[10px] sm:gap-3">
-        {visible.map((event, i) => {
-          const m = mobile[i] ?? { span: 12, row: 0 };
-          const d = desktop[i] ?? { span: 12, row: 0 };
+  return (
+    <div className="relative">
+      <ul
+        ref={scrollRef}
+        onMouseEnter={pause}
+        onMouseLeave={resume}
+        onTouchStart={pause}
+        onTouchEnd={resume}
+        className="m-0 flex items-stretch list-none p-0 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to right, transparent, #000 4%, #000 96%, transparent)",
+          maskImage:
+            "linear-gradient(to right, transparent, #000 4%, #000 96%, transparent)",
+        }}
+      >
+        {loop.map((event, i) => {
+          const isClone = i >= events.length;
           const count = event.photos.length;
           return (
-            <button
-              key={event.slug}
-              type="button"
-              onClick={() => {
-                trackEvent({
-                  name: "portfolio_item_click",
-                  page,
-                  item_id: event.slug,
-                });
-                setActive(event);
-              }}
-              aria-label={`Ver as ${count} fotos de ${event.name}`}
-              className={`group block w-full cursor-pointer text-left transform-gpu transition-transform duration-[360ms] ease-out hover:-translate-y-[3px] ${SPAN_MOBILE[m.span] ?? "col-span-12"} ${HEIGHT_MOBILE[m.row % 2]} ${SPAN_DESKTOP[d.span] ?? "sm:col-span-12"} ${HEIGHT_DESKTOP[d.row % 2]}`}
+            <li
+              key={i}
+              aria-hidden={isClone || undefined}
+              className="shrink-0 w-[clamp(280px,80vw,440px)] pr-[clamp(12px,1.6vw,20px)]"
             >
-              <PhotoPlaceholder
-                project={event.name}
-                type={`${event.categoryLabel} · ${count} fotos`}
-                src={event.photos[0]}
-                alt={`${event.name}, ${event.categoryLabel}`}
-                sizes="(max-width: 640px) 100vw, (max-width: 1280px) 60vw, 740px"
-              />
-            </button>
+              <button
+                type="button"
+                tabIndex={isClone ? -1 : undefined}
+                onClick={() => {
+                  trackEvent({
+                    name: "portfolio_item_click",
+                    page,
+                    item_id: event.slug,
+                  });
+                  setActive(event);
+                }}
+                aria-label={`Ver as ${count} fotos de ${event.name}`}
+                className="group block w-full cursor-pointer text-left transform-gpu transition-transform duration-[450ms] ease-out hover:scale-[1.02]"
+              >
+                <div className="relative aspect-[4/5]">
+                  <PhotoPlaceholder
+                    project={event.name}
+                    type={`${event.categoryLabel} · ${count} fotos`}
+                    src={event.photos[0]}
+                    alt={`${event.name}, ${event.categoryLabel}`}
+                    sizes="(max-width: 640px) 80vw, 440px"
+                    loading={!isClone && i < 6 ? "eager" : "lazy"}
+                  />
+                </div>
+              </button>
+            </li>
           );
         })}
-      </div>
+      </ul>
 
       {active
         ? createPortal(
@@ -196,16 +174,18 @@ function EventLightbox({
       if (e.key === "ArrowLeft") setIdx((i) => (i - 1 + count) % count);
       if (e.key === "ArrowRight") setIdx((i) => (i + 1) % count);
     };
-    const prevOverflow = document.body.style.overflow;
-    const prevPadRight = document.body.style.paddingRight;
-    // Compensa a barra de rolagem que some ao travar o scroll (ver PhotoCarousel).
-    const sbw = window.innerWidth - document.documentElement.clientWidth;
-    document.body.style.overflow = "hidden";
-    if (sbw > 0) document.body.style.paddingRight = `${sbw}px`;
+    // Trava o scroll no html E no body (a barra do documento pode estar em
+    // qualquer um deles); sem padding-right, que também viraria faixa branca.
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtml = html.style.overflow;
+    const prevBody = body.style.overflow;
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = prevOverflow;
-      document.body.style.paddingRight = prevPadRight;
+      html.style.overflow = prevHtml;
+      body.style.overflow = prevBody;
       window.removeEventListener("keydown", onKey);
     };
   }, [count, onClose]);
@@ -275,9 +255,12 @@ function EventLightbox({
           </div>
         </figcaption>
 
-        {/* Pré-carrega vizinhas para a navegação manual não piscar. */}
+        {/* Pré-carrega vizinhas para a navegação manual não piscar.
+            Dedup + guarda de count: com 1 foto, os vizinhos seriam [0, 0]. */}
         <div aria-hidden="true" className="hidden">
-          {[(idx + 1) % count, (idx - 1 + count) % count].map((n) => (
+          {Array.from(
+            new Set(count > 1 ? [(idx + 1) % count, (idx - 1 + count) % count] : []),
+          ).map((n) => (
             // eslint-disable-next-line @next/next/no-img-element
             <img key={n} src={event.photos[n]} alt="" />
           ))}

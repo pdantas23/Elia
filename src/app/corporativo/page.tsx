@@ -1,7 +1,19 @@
 import type { Metadata } from "next";
 
+import {
+  BookOpen,
+  FileImage,
+  Gift,
+  Handshake,
+  LayoutGrid,
+  Lightbulb,
+  MessagesSquare,
+  PackageCheck,
+  Palette,
+  Printer,
+} from "lucide-react";
+
 import { CTAButton } from "@/components/landing/CTAButton";
-import { DeliverablesCarousel } from "@/components/landing/DeliverablesCarousel";
 import {
   CONTAINER,
   EDITORIAL_TOKENS,
@@ -11,14 +23,15 @@ import {
 } from "@/components/landing/editorial-tokens";
 import { EditorialFooter } from "@/components/landing/EditorialFooter";
 import { EditorialLeadForm } from "@/components/landing/EditorialLeadForm";
+import { EventPortfolio } from "@/components/landing/EventPortfolio";
 import { FloatingWA } from "@/components/landing/FloatingWA";
 import { InlineWA } from "@/components/landing/InlineWA";
-import { OliverParallax } from "@/components/landing/OliverParallax";
-import { ParallaxY } from "@/components/landing/ParallaxY";
-import { PhotoCarousel } from "@/components/landing/PhotoCarousel";
+import { PhotoCue, PhotoReveal } from "@/components/landing/PhotoReveal";
+import { PhotoPlaceholder } from "@/components/landing/PhotoPlaceholder";
 import { Reveal } from "@/components/landing/Reveal";
 import { TrackedLink } from "@/components/landing/TrackedLink";
 import { Topbar } from "@/components/landing/Topbar";
+import { StudioMapCard } from "@/components/landing/StudioMapCard";
 import { WAButton } from "@/components/landing/WAButton";
 import { WALink } from "@/components/landing/WALink";
 import {
@@ -28,6 +41,7 @@ import {
   STUDIO_VISIT_NOTE,
   STUDIO_VISIT_TITLE,
 } from "@/lib/constants";
+import { getCorporateProjects } from "@/lib/portfolio";
 import { assetPath } from "@/lib/utils";
 import { WHATSAPP_MESSAGES, whatsappLink } from "@/lib/whatsapp";
 
@@ -55,127 +69,114 @@ const LEDE_CENTER =
   "text-[var(--ink-soft)] text-[clamp(16px,1.7vw,19px)] leading-[1.6] max-w-[52ch] text-pretty mt-[16px]";
 
 // ─────────── section data ───────────
-// Marcas corporativas reais executadas pelo Eliá (extraídas do book de logotipos).
-// Carrossel do hero e parallax do portfólio usam CONJUNTOS DISTINTOS (sem repetir marca).
-const LOGOS_BASE = "/images/portfolio/logos";
-type Brand = { project: string; type: string; src?: string };
-const logo = (project: string, type: string, file: string): Brand => ({
-  project,
-  type,
-  src: assetPath(`${LOGOS_BASE}/${file}.webp`),
-});
-
-// Hero (carrossel automático). 13 marcas.
-const CAROUSEL_ITEMS: Brand[] = [
-  logo("Raeda Veículos", "Concessionária", "raeda-veiculos"),
-  logo("Zurich", "Cafés e biscoitos", "zurich-cafes"),
-  logo("Cardio 086", "Clínica cardiológica", "cardio-086"),
-  logo("LP Auto Peças", "Autopeças", "lp-auto-pecas"),
-  logo("EvoluAuto", "Assistência automotiva", "evoluauto"),
-  logo("CivicBox", "Analytics", "civicbox"),
-  logo("Montevita", "Assistência em saúde", "montevita"),
-  logo("Eco Travels", "Turismo", "eco-travels"),
-  logo("QG Fashion", "Moda", "qg-fashion"),
-  logo("Piauí Autos", "Manutenção automotiva", "piaui-autos"),
-  logo("RAV Motors", "Concessionária", "rav-motors"),
-  logo("Mercado do Pão", "Padaria", "mercado-do-pao"),
-  logo("Conecta Piauí", "Site de notícias", "conecta-piaui"),
-];
-
-// Portfólio (parallax em colunas). 12 marcas, diferentes do carrossel.
-const PORTFOLIO_ITEMS: Brand[] = [
-  logo("ArtConcept", "Odontologia", "artconcept"),
-  logo("Geórgia Lau", "Ortodontia", "georgia-lau"),
-  logo("Odonto Fan", "Odontologia", "odonto-fan"),
-  logo("Alef França", "Instituto odontológico", "alef-franca"),
-  logo("Onda Laranja", "Marca", "onda-laranja"),
-  logo("Graziela", "Marca", "graziela"),
-  logo("Solutta", "Lavanderia", "solutta"),
-  logo("Silas TV", "Comunicação", "silas-tv"),
-  logo("Mózzi", "Gastronomia", "mozzi"),
-  logo("Contar", "Contabilidade", "contar"),
-  logo("Jedilog", "Logística", "jedilog"),
-  logo("Grupo LSÁ", "Empreendimentos", "grupo-lsa"),
-];
-
 // Entregáveis (Identidade Visual Corporativa). Curtos, máx. 8 palavras.
 const INCLUDED_ITEMS = [
-  "Logotipo em PNG e PDF",
-  "Estudo de cores e tipografias",
-  "Manual de aplicação",
-  "Três aplicações cortesia",
-  "Consultoria de produção",
+  { icon: FileImage, label: "Logotipo em PNG e PDF" },
+  { icon: Palette, label: "Estudo de cores e tipografias" },
+  { icon: BookOpen, label: "Manual de aplicação" },
+  { icon: Gift, label: "Três aplicações cortesia" },
+  { icon: Handshake, label: "Consultoria de produção" },
 ];
 
 // Etapas. Descrição máx. 12 palavras.
 const PROCESS_STEPS = [
-  { title: "Briefing", desc: "Entender o negócio, o público e os pontos de contato." },
-  { title: "Conceito", desc: "Direção visual com fundamento estratégico e desdobramentos previstos." },
-  { title: "Aplicação", desc: "Papelaria, sinalização, embalagem e digital num só sistema." },
-  { title: "Execução", desc: "Gráfica e instalador definidos, produção supervisionada de perto." },
-  { title: "Entrega", desc: "Arquivos finais e manual para a equipe aplicar." },
+  { icon: MessagesSquare, title: "Briefing", desc: "Entender o negócio, o público e os pontos de contato." },
+  { icon: Lightbulb, title: "Conceito", desc: "Direção visual com fundamento estratégico e desdobramentos previstos." },
+  { icon: LayoutGrid, title: "Aplicação", desc: "Papelaria, sinalização, embalagem e digital num só sistema." },
+  { icon: Printer, title: "Execução", desc: "Gráfica e instalador definidos, produção supervisionada de perto." },
+  { icon: PackageCheck, title: "Entrega", desc: "Arquivos finais e manual para a equipe aplicar." },
 ];
 
 const PROJECT_TYPES = ["Marca nova", "Rebranding", "Aplicações", "Outro"];
 
 // ─────────── page ───────────
 export default function CorporativoPage() {
+  const corporateProjects = getCorporateProjects();
+
   return (
     <div
       style={EDITORIAL_TOKENS}
       className={`${FONT_UI} bg-[var(--bg)] text-[var(--ink)] min-h-[100dvh] overflow-x-clip text-[16px] leading-[1.6] tracking-[0.005em] [scroll-behavior:smooth]`}
     >
-      <Topbar />
+      <Topbar
+        sections={[
+          { label: "Portfólio", href: "#portfolio" },
+          { label: "Como funciona", href: "#como-funciona" },
+          { label: "O que você recebe", href: "#entregaveis" },
+          { label: "Contato", href: "#contato" },
+        ]}
+      />
       <main>
-        {/* ═══ 1. HERO ═══ Carrossel + parallax sutil. Carrossel por último (mobile e desktop). */}
-        <section className="relative bg-[var(--surface)] overflow-x-clip pt-[clamp(32px,4vw,44px)] pb-[clamp(48px,7vw,96px)] flex flex-col gap-[clamp(32px,5vw,60px)]">
-          <div className={`${CONTAINER} relative w-full`}>
-            <Reveal className="flex flex-col items-center text-center gap-[clamp(16px,2vw,24px)] max-w-[900px] mx-auto">
-              <h1
-                className={`${FONT_DISPLAY} italic font-medium text-[clamp(34px,5.8vw,68px)] leading-[1.04] tracking-[-0.012em] m-0 text-balance`}
-              >
-                Uma marca consistente,{" "}
-                <span className="text-[var(--brand)]">do cartão à fachada.</span>
-              </h1>
-              <p className="text-[var(--ink-soft)] text-[clamp(16px,1.7vw,19px)] leading-[1.55] max-w-[48ch] text-pretty m-0">
-                Sem sistema, a empresa parece três empresas. O Eliá constrói o
-                padrão e acompanha a produção.
-              </p>
-              <div className="flex flex-wrap justify-center gap-[10px] mt-1">
-                <WAButton href={WA_HREF} section="hero" />
-                <CTAButton
-                  href="#contato"
-                  label="Solicitar orçamento"
-                  destination="form"
-                  section="hero"
-                />
-              </div>
-            </Reveal>
-          </div>
-
-          <Reveal variant="photo">
-            <ParallaxY offset={40}>
-              <PhotoCarousel items={CAROUSEL_ITEMS} />
-            </ParallaxY>
-          </Reveal>
-        </section>
-
-        {/* ═══ 2. PORTFÓLIO ═══ Protagonista. Parallax em colunas. */}
-        <section id="portfolio" className="pt-[clamp(16px,4vw,48px)]">
+        {/* ═══ 1. HERO ═══ Texto + botões centralizados; card de foto. Empilha no mobile. */}
+        <section className="bg-[var(--surface)] border-b border-[var(--line)] py-[clamp(40px,7vw,96px)]">
           <div className={CONTAINER}>
-            <Reveal className={HEAD_CENTER}>
-              <div className={EYEBROW}>
-                <span>Projetos executados</span>
-              </div>
-              <h2 className={H2}>Na rua, no balcão e na mão do cliente.</h2>
-              <p className={LEDE_CENTER}>
-                Projetos corporativos com aplicação real.
-              </p>
-            </Reveal>
-          </div>
+            <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-[clamp(32px,5vw,72px)] items-center">
+              <Reveal className="flex flex-col items-center text-center gap-[clamp(18px,2.4vw,26px)]">
+                <h1
+                  className={`${FONT_DISPLAY} italic font-medium text-[clamp(34px,5.8vw,68px)] leading-[1.04] tracking-[-0.012em] m-0 text-balance`}
+                >
+                  Uma marca consistente,{" "}
+                  <span className="text-[var(--brand)]">do conceito ao material entregue.</span>
+                </h1>
+                <p className="text-[var(--ink-soft)] text-[clamp(16px,1.7vw,19px)] leading-[1.55] max-w-[48ch] text-pretty m-0">
+                  O Eliá constrói uma identidade visual que conversa com o
+                  público da sua marca e auxilia na ativação para que cada
+                  experiência seja única.
+                </p>
+                <div className="flex flex-wrap justify-center gap-[10px] mt-1">
+                  <WAButton href={WA_HREF} section="hero" />
+                  <CTAButton
+                    href="#contato"
+                    label="Solicitar orçamento"
+                    destination="form"
+                    section="hero"
+                  />
+                </div>
+              </Reveal>
 
-          <OliverParallax images={PORTFOLIO_ITEMS} />
+              <Reveal
+                variant="photo"
+                className="w-full max-w-[440px] mx-auto lg:mx-0 lg:ml-auto"
+              >
+                <figure className="m-0 rounded-[2px] bg-[var(--bg)] border border-[var(--line)]">
+                  <div className="m-[clamp(10px,1.4vw,16px)] border border-[var(--line-strong)] p-[clamp(10px,1.4vw,16px)]">
+                    <div className="relative aspect-[4/5] overflow-hidden">
+                      <PhotoPlaceholder
+                        project="Ótica Brasileira"
+                        type="Papelaria e brindes"
+                        src={assetPath("/images/hero/corporativo-otica-brasileira.webp")}
+                        alt="Sacola e brindes personalizados da Ótica Brasileira sobre uma mesa"
+                        priority
+                        sizes="(max-width: 1024px) 100vw, 440px"
+                      />
+                    </div>
+                  </div>
+                </figure>
+              </Reveal>
+            </div>
+          </div>
         </section>
+
+        {/* ═══ 2. PORTFÓLIO ═══ Explore por projeto. Aparece quando há fotos nas pastas. */}
+        {corporateProjects.length > 0 ? (
+          <section id="portfolio" className="scroll-mt-[clamp(80px,12vw,110px)] pt-[clamp(16px,4vw,48px)]">
+            {/* Portfólio por projeto: carrossel de capas; clicar abre o álbum no lightbox */}
+            <div className={CONTAINER}>
+              <Reveal className={HEAD_CENTER}>
+                <div className={EYEBROW}>
+                  <span>Explore por projeto</span>
+                </div>
+                <h2 className={H2}>Nossos projetos: marcas que elevaram as expectativas.</h2>
+                <p className={LEDE_CENTER}>
+                  Toque nas imagens para abrir os álbuns.
+                </p>
+              </Reveal>
+            </div>
+            <Reveal variant="photo">
+              <EventPortfolio events={corporateProjects} page="/corporativo" />
+            </Reveal>
+          </section>
+        ) : null}
 
         <InlineWA
           section="portfolio"
@@ -183,53 +184,51 @@ export default function CorporativoPage() {
           text="Algum dos projetos inspirou você? Entre em contato e vamos conversar."
         />
 
-        {/* ═══ 3. COMO FUNCIONA ═══ Etapas primeiro, depois "O que você recebe" (carrossel). */}
-        <section className="py-[clamp(48px,9vw,104px)]">
+        {/* ═══ 3. COMO FUNCIONA ═══ Etapas do processo + prazos. */}
+        <section
+          id="como-funciona"
+          className="scroll-mt-[clamp(80px,12vw,110px)] py-[clamp(48px,9vw,104px)]"
+        >
           <div className={CONTAINER}>
             <Reveal className={HEAD_CENTER}>
               <div className={EYEBROW}>
                 <span>Como funciona</span>
               </div>
-              <h2 className={H2}>Do briefing ao material pronto.</h2>
+              <h2 className={H2}>Do briefing ao material entregue.</h2>
               <p className={LEDE_CENTER}>
-                Como o projeto acontece e o que fica com você.
+                Como o projeto acontece, desde o primeiro contato.
               </p>
             </Reveal>
 
-            {/* Bloco 1: Etapas (stepper). Mais direto, vem primeiro. */}
             <Reveal>
-              <div className={`${EYEBROW} mx-auto w-full justify-center mb-[clamp(20px,3vw,32px)]`}>
-                <span>Como o projeto acontece</span>
-              </div>
               <ol className="grid grid-cols-1 gap-[2px] list-none p-0 m-0 sm:grid-cols-5">
-                {PROCESS_STEPS.map((s, i) => (
-                  <li
-                    key={i}
-                    className="flex flex-col items-center text-center gap-2 px-3 py-[clamp(18px,2.5vw,26px)] border-t border-[var(--line)] sm:border-t-[var(--line-strong)]"
-                  >
-                    <div className={`${FONT_DISPLAY} italic font-medium text-[var(--brand)] text-[28px] leading-none`}>
-                      0{i + 1}
-                    </div>
-                    <div className="font-semibold text-[14.5px] tracking-[0.02em] text-[var(--ink)]">
-                      {s.title}
-                    </div>
-                    <p className="text-[13px] leading-[1.45] text-[var(--ink-soft)] m-0 max-w-[24ch]">
-                      {s.desc}
-                    </p>
-                  </li>
-                ))}
+                {PROCESS_STEPS.map((s, i) => {
+                  const Icon = s.icon;
+                  return (
+                    <li
+                      key={i}
+                      className="border-t border-[var(--line)] sm:border-t-[var(--line-strong)]"
+                    >
+                      <PhotoReveal
+                        label={s.title}
+                        className="flex h-full w-full flex-col items-center text-center gap-2 px-3 py-[clamp(18px,2.5vw,26px)] transition-colors hover:bg-[var(--surface)]"
+                      >
+                        <Icon className="text-[var(--brand)] transition-transform duration-200 group-hover:scale-110" size={26} strokeWidth={1.5} aria-hidden="true" />
+                        <div className="font-semibold text-[14.5px] tracking-[0.02em] text-[var(--ink)]">
+                          {s.title}
+                          <PhotoCue className="ml-[5px]" />
+                        </div>
+                        <p className="text-[13px] leading-[1.45] text-[var(--ink-soft)] m-0 max-w-[24ch]">
+                          {s.desc}
+                        </p>
+                      </PhotoReveal>
+                    </li>
+                  );
+                })}
               </ol>
             </Reveal>
 
-            {/* Bloco 2: O que você recebe (entregáveis, carrossel manual). */}
-            <Reveal className="mt-[clamp(48px,7vw,80px)]">
-              <div className={`${EYEBROW} mx-auto w-full justify-center mb-[clamp(20px,3vw,32px)]`}>
-                <span>O que você recebe</span>
-              </div>
-              <DeliverablesCarousel items={INCLUDED_ITEMS} />
-            </Reveal>
-
-            {/* Bloco 3: Prazos (linha discreta) */}
+            {/* Prazos (linha discreta) */}
             <Reveal className="mt-[clamp(36px,5vw,56px)] text-center">
               <p className={`${FONT_MONO} text-[11.5px] tracking-[0.08em] uppercase text-[var(--ink-quiet)] m-0`}>
                 Identidade: 10 dias úteis. Aplicações: 10 dias úteis após
@@ -239,10 +238,46 @@ export default function CorporativoPage() {
           </div>
         </section>
 
-        {/* ═══ 4. CONTATO ═══ Formulário + Estúdio fundidos. */}
+        {/* ═══ 4. O QUE VOCÊ RECEBE ═══ Entregáveis (carrossel). */}
+        <section
+          id="entregaveis"
+          className="scroll-mt-[clamp(80px,12vw,110px)] bg-[var(--surface)] border-t border-b border-[var(--line)] py-[clamp(48px,9vw,104px)]"
+        >
+          <div className={CONTAINER}>
+            <Reveal className={HEAD_CENTER}>
+              <div className={EYEBROW}>
+                <span>O que você recebe</span>
+              </div>
+              <h2 className={H2}>Tudo que sai do projeto.</h2>
+              <p className={LEDE_CENTER}>
+                Os entregáveis da identidade corporativa.
+              </p>
+            </Reveal>
+            <Reveal className="mx-auto flex max-w-[460px] flex-col">
+              {INCLUDED_ITEMS.map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <PhotoReveal
+                    key={i}
+                    label={item.label}
+                    className="flex w-full items-center gap-[14px] border-b border-[var(--line)] last:border-b-0 px-2 py-[clamp(14px,2vw,18px)] transition-colors hover:bg-[var(--surface)]"
+                  >
+                    <Icon className="shrink-0 text-[var(--brand)] transition-transform duration-200 group-hover:scale-110" size={26} strokeWidth={1.4} aria-hidden="true" />
+                    <span className="text-left text-[15px] leading-[1.3] text-[var(--ink)]">
+                      {item.label}
+                    </span>
+                    <PhotoCue className="ml-auto" />
+                  </PhotoReveal>
+                );
+              })}
+            </Reveal>
+          </div>
+        </section>
+
+        {/* ═══ 5. CONTATO ═══ Formulário + Estúdio fundidos. */}
         <section
           id="contato"
-          className="bg-[var(--surface)] border-t border-b border-[var(--line)] py-[clamp(56px,10vw,120px)]"
+          className="scroll-mt-[clamp(80px,12vw,110px)] bg-[var(--surface)] border-t border-b border-[var(--line)] py-[clamp(56px,10vw,120px)]"
         >
           <div className={CONTAINER}>
             <Reveal className={HEAD_CENTER}>
@@ -265,12 +300,14 @@ export default function CorporativoPage() {
                   projectTypeLabel="Tipo de projeto"
                   defaultProjectType="Marca nova"
                   showDateField={false}
+                  showBudgetField={false}
+                  showNotesField={false}
                 />
               </Reveal>
 
               <Reveal delayMs={120} className="flex flex-col gap-[clamp(18px,2.4vw,26px)] lg:pt-2">
                 <div className={EYEBROW}>
-                  <span>Estúdio</span>
+                  <span>Escritório</span>
                 </div>
                 <h3 className={`${FONT_DISPLAY} italic font-medium text-[clamp(22px,2.6vw,30px)] leading-[1.15] m-0 text-balance`}>
                   {STUDIO_VISIT_TITLE}
@@ -296,6 +333,7 @@ export default function CorporativoPage() {
                   </span>
                   <span className="text-[15px] text-[var(--ink-soft)]">{STUDIO_CITY}</span>
                 </TrackedLink>
+                <StudioMapCard />
                 <p className="text-[14.5px] leading-[1.55] text-[var(--ink)] m-0">
                   {STUDIO_VISIT_NOTE}
                 </p>

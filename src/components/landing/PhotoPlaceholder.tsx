@@ -28,6 +28,8 @@ type PhotoPlaceholderProps = {
   alt?: string;
   /** Hint next/image to prioritize above-the-fold tiles. */
   priority?: boolean;
+  /** Loading strategy for next/image. Ignored when `priority` is set. */
+  loading?: "eager" | "lazy";
   /** Responsive sizes hint for next/image. */
   sizes?: string;
 };
@@ -39,6 +41,7 @@ export function PhotoPlaceholder({
   src,
   alt,
   priority,
+  loading,
   sizes = "(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 40vw",
 }: PhotoPlaceholderProps) {
   const sizeClass = ratio ? RATIO_CLASS[ratio] : "h-full";
@@ -55,6 +58,7 @@ export function PhotoPlaceholder({
           fill
           sizes={sizes}
           priority={priority}
+          loading={priority ? undefined : loading}
           className="object-cover transition-transform duration-[600ms] group-hover:scale-[1.03]"
         />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-start gap-[4px] p-[clamp(16px,2.4vw,22px)] bg-gradient-to-t from-black/60 via-black/25 to-transparent">

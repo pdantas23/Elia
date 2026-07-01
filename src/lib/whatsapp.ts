@@ -14,7 +14,7 @@ export const WHATSAPP_MESSAGES = {
     "Olá, vim pela página corporativa e quero entender melhor sobre identidade visual para minha empresa.",
   eventos:
     "Olá, vim pela página de eventos e quero entender melhor sobre identidade para meu evento.",
-  estudio: "Olá, gostaria de agendar uma visita ao estúdio do Eliá.",
+  estudio: "Olá, gostaria de agendar uma visita ao escritório do Eliá.",
 } as const;
 
 export type WhatsAppMessageKey = keyof typeof WHATSAPP_MESSAGES;

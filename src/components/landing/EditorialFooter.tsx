@@ -161,10 +161,10 @@ export function EditorialFooter() {
             </a>
           </div>
 
-          {/* Estúdio */}
+          {/* Escritório */}
           <div className="flex flex-col items-center gap-2.5">
             <div className={colLabel} style={{ color: INK_SOFT }}>
-              Estúdio
+              Escritório
             </div>
             <span className="text-[14px]" style={{ color: INK_SOFT }}>
               {STUDIO_CITY}

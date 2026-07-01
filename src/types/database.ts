@@ -39,7 +39,7 @@ export interface Database {
           whatsapp: string;
           email: string;
           tipo_projeto: "corporativo" | "evento" | "outro";
-          prazo: "urgente" | "30_dias" | "60_dias" | "sem_pressa";
+          prazo: "urgente" | "30_dias" | "60_dias" | "sem_pressa" | null;
           orcamento: "ate_2k" | "2k_3k" | "3k_5k" | "acima_5k" | "nao_definido" | null;
           observacao: string | null;
           origem_pagina: "/" | "/corporativo" | "/eventos" | "/bio";
@@ -62,7 +62,7 @@ export interface Database {
           whatsapp: string;
           email: string;
           tipo_projeto: "corporativo" | "evento" | "outro";
-          prazo: "urgente" | "30_dias" | "60_dias" | "sem_pressa";
+          prazo?: "urgente" | "30_dias" | "60_dias" | "sem_pressa" | null;
           orcamento?: "ate_2k" | "2k_3k" | "3k_5k" | "acima_5k" | "nao_definido" | null;
           observacao?: string | null;
           origem_pagina: "/" | "/corporativo" | "/eventos" | "/bio";
@@ -85,7 +85,7 @@ export interface Database {
           whatsapp?: string;
           email?: string;
           tipo_projeto?: "corporativo" | "evento" | "outro";
-          prazo?: "urgente" | "30_dias" | "60_dias" | "sem_pressa";
+          prazo?: "urgente" | "30_dias" | "60_dias" | "sem_pressa" | null;
           orcamento?: "ate_2k" | "2k_3k" | "3k_5k" | "acima_5k" | "nao_definido" | null;
           observacao?: string | null;
           origem_pagina?: "/" | "/corporativo" | "/eventos" | "/bio";

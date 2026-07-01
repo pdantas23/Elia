@@ -1,0 +1,28 @@
+PORTFÓLIO CORPORATIVO (página /corporativo)
+
+Estrutura de pastas (igual ao de eventos, mas dividido por setor):
+
+  corporativo/
+    <setor>/
+      <projeto>/
+        foto-01.webp
+        foto-02.webp
+        ...
+
+- 1º nível (<setor>): vira o chip de filtro. Ex.: odontologia, gastronomia, logistica.
+- 2º nível (<projeto>): vira um card. Ex.: artconcept, mozzi, jedilog.
+- As fotos: .webp, 400-500 KB no máximo, nomeadas em ordem (foto-01, foto-02...).
+  A primeira foto (ordem alfabética) é a capa do card.
+
+Exemplo:
+  corporativo/odontologia/artconcept/foto-01.webp
+  corporativo/odontologia/georgia-lau/foto-01.webp
+  corporativo/gastronomia/mozzi/foto-01.webp
+
+O site lê estas pastas no build. Setor ou projeto novo entra sozinho,
+sem mexer no código, bastando criar a pasta com fotos.
+
+Acentos/grafia de setores e projetos: ajustar nos mapas
+CORP_SECTOR_NAMES e CORP_PROJECT_NAMES em src/lib/portfolio.ts.
+
+Enquanto não houver fotos, o bloco de portfólio não aparece na página.

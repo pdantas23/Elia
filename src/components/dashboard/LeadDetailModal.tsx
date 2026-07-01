@@ -302,7 +302,10 @@ function ComercialBody({
             label="Tipo"
             value={<span className="capitalize">{lead.tipo_projeto}</span>}
           />
-          <Field label="Prazo" value={PRAZO_LABELS[lead.prazo] ?? lead.prazo} />
+          <Field
+            label="Prazo"
+            value={lead.prazo ? PRAZO_LABELS[lead.prazo] ?? lead.prazo : "Não informado"}
+          />
           <Field
             label="Orçamento"
             value={

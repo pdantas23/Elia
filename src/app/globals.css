@@ -132,6 +132,7 @@ body {
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
   }
 }
 
@@ -154,6 +155,9 @@ body {
   will-change: transform;
 }
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   .elia-carousel {
     overflow-x: auto;
   }

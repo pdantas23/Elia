@@ -9,7 +9,6 @@ export const leadFormSchema = z.object({
     .regex(/^\(\d{2}\) \d{4,5}-\d{4}$/, "Formato: (11) 99999-9999"),
   email: z.string().email("E-mail inválido"),
   tipo_projeto: z.enum(["corporativo", "evento", "outro"]),
-  prazo: z.enum(["urgente", "30_dias", "60_dias", "sem_pressa"]),
   orcamento: z
     .enum(["ate_2k", "2k_3k", "3k_5k", "acima_5k", "nao_definido"])
     .optional(),

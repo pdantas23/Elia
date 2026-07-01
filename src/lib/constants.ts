@@ -28,6 +28,10 @@ export const STUDIO_CITY = "Teresina, PI";
 export const STUDIO_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
   `${STUDIO_ADDRESS}, ${STUDIO_CITY}`,
 )}`;
+/** URL de embed do Google Maps (iframe, sem chave de API). */
+export const STUDIO_MAPS_EMBED_URL = `https://www.google.com/maps?q=${encodeURIComponent(
+  `${STUDIO_ADDRESS}, ${STUDIO_CITY}`,
+)}&z=16&output=embed`;
 export const STUDIO_SCHEDULING_NOTE =
   "Atendimento presencial mediante agendamento prévio.";
 /** Texto aprovado pela cliente para o bloco Estúdio das LPs (jun/2026). */

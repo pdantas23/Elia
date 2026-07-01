@@ -25,7 +25,7 @@ create table public.leads_elia (
   whatsapp text not null,
   email text not null,
   tipo_projeto text not null check (tipo_projeto in ('corporativo', 'evento', 'outro')),
-  prazo text not null check (prazo in ('urgente', '30_dias', '60_dias', 'sem_pressa')),
+  prazo text check (prazo in ('urgente', '30_dias', '60_dias', 'sem_pressa')),
   orcamento text check (orcamento in ('ate_2k', '2k_3k', '3k_5k', 'acima_5k', 'nao_definido')),
   observacao text,
   origem_pagina text not null check (origem_pagina in ('/', '/corporativo', '/eventos', '/bio')),

@@ -79,7 +79,7 @@ export function LeadDetail({ lead, comerciais }: LeadDetailProps) {
               </div>
               <div>
                 <dt className="text-sm text-muted-foreground">Prazo</dt>
-                <dd className="font-medium">{lead.prazo.replace("_", " ")}</dd>
+                <dd className="font-medium">{lead.prazo?.replace("_", " ") ?? "Não informado"}</dd>
               </div>
               <div>
                 <dt className="text-sm text-muted-foreground">Orçamento</dt>

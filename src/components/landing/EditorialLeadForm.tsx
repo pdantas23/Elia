@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  useMemo,
   useState,
   type ChangeEvent,
   type FormEvent,
@@ -38,11 +37,14 @@ type EditorialLeadFormProps = {
   projectTypeLabel?: string;
   /** Optional preset for the project type (defaults to first option). */
   defaultProjectType?: string;
-  /** Show the optional date field + derive prazo from it. Default true. */
+  /** Show the optional date field. Default true. */
   showDateField?: boolean;
+  /** Show the optional "Orçamento" field. Default true. */
+  showBudgetField?: boolean;
+  /** Show the optional "Observação" field. Default true. */
+  showNotesField?: boolean;
 };
 
-const DEADLINE_OPTIONS = ["Urgente", "Em 30 dias", "Em 60 dias", "Sem pressa"];
 const BUDGET_OPTIONS = [
   "Até R$ 2.000",
   "R$ 2.000 – R$ 3.000",
@@ -52,12 +54,6 @@ const BUDGET_OPTIONS = [
 ];
 
 // Mapas de rótulo (UI) para os valores do enum em leads_elia.
-const PRAZO_MAP: Record<string, "urgente" | "30_dias" | "60_dias" | "sem_pressa"> = {
-  Urgente: "urgente",
-  "Em 30 dias": "30_dias",
-  "Em 60 dias": "60_dias",
-  "Sem pressa": "sem_pressa",
-};
 const BUDGET_MAP: Record<
   string,
   "ate_2k" | "2k_3k" | "3k_5k" | "acima_5k" | "nao_definido"
@@ -80,26 +76,12 @@ function validEmail(v: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 }
 
-function deadlineFromDate(dateStr: string) {
-  if (!dateStr) return null;
-  const ev = new Date(dateStr + "T00:00:00");
-  if (isNaN(ev.getTime())) return null;
-  const now = new Date();
-  const diffDays = Math.round((ev.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-  if (diffDays < 0) return { auto: null, hint: "Data no passado. Confirme se está correta." };
-  if (diffDays <= 30) return { auto: "Urgente", hint: `Aprox. ${diffDays} dias até o evento. Prazo: Urgente.` };
-  if (diffDays <= 60) return { auto: "Em 30 dias", hint: `Aprox. ${diffDays} dias. Prazo de execução: 30 dias.` };
-  if (diffDays <= 120) return { auto: "Em 60 dias", hint: `Aprox. ${diffDays} dias. Prazo de execução: 60 dias.` };
-  return { auto: "Sem pressa", hint: `Aprox. ${diffDays} dias. Planejamento com folga.` };
-}
-
 type FormData = {
   nome: string;
   whatsapp: string;
   email: string;
   projeto: string;
   dataEvento: string;
-  prazo: string;
   orcamento: string;
   obs: string;
 };
@@ -121,6 +103,8 @@ export function EditorialLeadForm({
   projectTypeLabel = "Tipo de projeto",
   defaultProjectType,
   showDateField = true,
+  showBudgetField = true,
+  showNotesField = true,
 }: EditorialLeadFormProps) {
   const [data, setData] = useState<FormData>({
     nome: "",
@@ -128,7 +112,6 @@ export function EditorialLeadForm({
     email: "",
     projeto: defaultProjectType ?? projectTypes[0] ?? "",
     dataEvento: "",
-    prazo: "",
     orcamento: "",
     obs: "",
   });
@@ -136,9 +119,6 @@ export function EditorialLeadForm({
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-
-  const derived = useMemo(() => deadlineFromDate(data.dataEvento), [data.dataEvento]);
-  const effectivePrazo = derived?.auto || data.prazo;
 
   const update =
     (k: keyof FormData) =>
@@ -156,7 +136,6 @@ export function EditorialLeadForm({
     if (data.whatsapp.replace(/\D/g, "").length < 10) errs.whatsapp = "WhatsApp incompleto.";
     if (!validEmail(data.email)) errs.email = "E-mail inválido.";
     if (!data.projeto) errs.projeto = "Selecione um tipo.";
-    if (!effectivePrazo) errs.prazo = "Informe a data do evento ou selecione um prazo.";
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
@@ -166,7 +145,6 @@ export function EditorialLeadForm({
 
     const tipoProjeto: TipoProjeto =
       tipoProjetoMap?.[data.projeto] ?? tipoProjetoDefault;
-    const prazo = PRAZO_MAP[effectivePrazo] ?? null;
 
     // Preserva o subtipo de projeto e a data do evento (que não têm coluna própria).
     const extras = [
@@ -185,7 +163,7 @@ export function EditorialLeadForm({
         whatsapp: data.whatsapp.replace(/\D/g, ""),
         email: data.email.trim().toLowerCase(),
         tipo_projeto: tipoProjeto,
-        prazo,
+        prazo: null,
         orcamento: BUDGET_MAP[data.orcamento] ?? null,
         observacao,
         origem_pagina: originPage,
@@ -365,90 +343,52 @@ export function EditorialLeadForm({
         )}
       </div>
 
-      {!derived ? (
-        <div className={`flex flex-col gap-[6px] ${fieldErrCls("prazo")}`}>
-          <label htmlFor="f-pz" className={LABEL_BASE}>
-            Prazo desejado
+      {showBudgetField && (
+        <div className="flex flex-col gap-[6px]">
+          <label htmlFor="f-or" className={LABEL_BASE}>
+            Orçamento{" "}
+            <span
+              className={`${FONT_DISPLAY} italic normal-case tracking-[0.04em] text-[13px] text-[var(--ink-quiet)] ml-[6px]`}
+            >
+              opcional
+            </span>
           </label>
           <select
-            id="f-pz"
+            id="f-or"
             className={SELECT_BASE}
-            value={data.prazo}
-            onChange={update("prazo")}
+            value={data.orcamento}
+            onChange={update("orcamento")}
           >
-            <option value="" disabled>
-              Selecionar
-            </option>
-            {DEADLINE_OPTIONS.map((o) => (
+            <option value="">Prefiro não dizer</option>
+            {BUDGET_OPTIONS.map((o) => (
               <option key={o} value={o}>
                 {o}
               </option>
             ))}
           </select>
-          {errors.prazo && (
-            <span className="text-[#B0524A] text-[11.5px] tracking-[0.04em]">
-              {errors.prazo}
-            </span>
-          )}
-        </div>
-      ) : (
-        <div className="flex flex-col gap-[6px]">
-          <label className={LABEL_BASE}>Prazo</label>
-          <div
-            className={`${FONT_DISPLAY} italic py-[6px] text-[19px] text-[var(--ink)]`}
-          >
-            {derived.auto || "A confirmar"}
-          </div>
-          <span
-            className={`${FONT_DISPLAY} italic text-[12px] text-[var(--ink-quiet)] mt-1`}
-          >
-            {derived.hint}
-          </span>
         </div>
       )}
 
-      <div className="flex flex-col gap-[6px]">
-        <label htmlFor="f-or" className={LABEL_BASE}>
-          Orçamento{" "}
-          <span
-            className={`${FONT_DISPLAY} italic normal-case tracking-[0.04em] text-[13px] text-[var(--ink-quiet)] ml-[6px]`}
-          >
-            opcional
-          </span>
-        </label>
-        <select
-          id="f-or"
-          className={SELECT_BASE}
-          value={data.orcamento}
-          onChange={update("orcamento")}
-        >
-          <option value="">Prefiro não dizer</option>
-          {BUDGET_OPTIONS.map((o) => (
-            <option key={o} value={o}>
-              {o}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="flex flex-col gap-[6px]">
-        <label htmlFor="f-ob" className={LABEL_BASE}>
-          Observação{" "}
-          <span
-            className={`${FONT_DISPLAY} italic normal-case tracking-[0.04em] text-[13px] text-[var(--ink-quiet)] ml-[6px]`}
-          >
-            opcional
-          </span>
-        </label>
-        <textarea
-          id="f-ob"
-          className={`${INPUT_BASE} resize-y min-h-[96px]`}
-          rows={4}
-          value={data.obs}
-          onChange={update("obs")}
-          placeholder="Conte um pouco sobre o evento, o tom que imagina, materiais que tem em mente…"
-        />
-      </div>
+      {showNotesField && (
+        <div className="flex flex-col gap-[6px]">
+          <label htmlFor="f-ob" className={LABEL_BASE}>
+            Observação{" "}
+            <span
+              className={`${FONT_DISPLAY} italic normal-case tracking-[0.04em] text-[13px] text-[var(--ink-quiet)] ml-[6px]`}
+            >
+              opcional
+            </span>
+          </label>
+          <textarea
+            id="f-ob"
+            className={`${INPUT_BASE} resize-y min-h-[96px]`}
+            rows={4}
+            value={data.obs}
+            onChange={update("obs")}
+            placeholder="Conte um pouco sobre o evento, o tom que imagina, materiais que tem em mente…"
+          />
+        </div>
+      )}
 
       {submitError && (
         <p className="text-[#B0524A] text-[13px] leading-[1.5] m-0">{submitError}</p>
