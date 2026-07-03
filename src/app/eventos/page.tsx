@@ -75,14 +75,14 @@ const PORTFOLIO_BASE = "/images/portfolio";
 
 // Entregáveis (Identidade Visual Festiva). Curtos, máx. 8 palavras.
 const INCLUDED_ITEMS = [
-  { icon: PenTool, label: "Monograma" },
-  { icon: BookOpen, label: "Manual de aplicação" },
-  { icon: Mail, label: "Convites impressos e digital" },
-  { icon: Wine, label: "Menu de buffet e drinks" },
-  { icon: Gift, label: "Brindes personalizados" },
-  { icon: Stamp, label: "Estampa exclusiva" },
-  { icon: CalendarHeart, label: "Save the date" },
-  { icon: Handshake, label: "Consultoria de produção" },
+  { icon: PenTool, label: "Monograma", src: "/images/eventos-entregaveis/monograma.webp" },
+  { icon: BookOpen, label: "Manual de aplicação", src: "/images/eventos-entregaveis/manual-tarsilla-filipe.webp" },
+  { icon: Mail, label: "Convites impressos e digital", src: "/images/eventos-entregaveis/convite-nadia-daniel.webp" },
+  { icon: Wine, label: "Menu de buffet e drinks", src: "/images/eventos-entregaveis/menu-drinks.webp" },
+  { icon: Gift, label: "Brindes personalizados", src: "/images/eventos-entregaveis/brindes-velas.webp" },
+  { icon: Stamp, label: "Estampa exclusiva", src: "/images/eventos-entregaveis/estampa-felipe.webp" },
+  { icon: CalendarHeart, label: "Save the date", src: "/images/eventos-entregaveis/save-the-date.webp" },
+  { icon: Handshake, label: "Consultoria de produção", src: "/images/eventos-entregaveis/consultoria-reservado.webp" },
 ];
 
 // Etapas. Descrição máx. 12 palavras.
@@ -220,6 +220,7 @@ export default function EventosPage() {
                   <PhotoReveal
                     key={i}
                     label={item.label}
+                    src={assetPath(item.src)}
                     className="flex flex-col items-center text-center gap-2.5 rounded-[3px] p-2 transition-colors hover:bg-[var(--surface)]"
                   >
                     <Icon className="text-[var(--brand)] transition-transform duration-200 group-hover:scale-110" size={26} strokeWidth={1.4} aria-hidden="true" />

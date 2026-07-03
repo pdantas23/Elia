@@ -71,20 +71,20 @@ const LEDE_CENTER =
 // ─────────── section data ───────────
 // Entregáveis (Identidade Visual Corporativa). Curtos, máx. 8 palavras.
 const INCLUDED_ITEMS = [
-  { icon: FileImage, label: "Logotipo em PNG e PDF" },
-  { icon: Palette, label: "Estudo de cores e tipografias" },
-  { icon: BookOpen, label: "Manual de aplicação" },
-  { icon: Gift, label: "Três aplicações cortesia" },
-  { icon: Handshake, label: "Consultoria de produção" },
+  { icon: FileImage, label: "Logotipo em PNG e PDF", src: "/images/entregaveis/logotipo-moodboard.webp" },
+  { icon: Palette, label: "Estudo de cores e tipografias", src: "/images/entregaveis/estudo-cores-tipografias.webp" },
+  { icon: BookOpen, label: "Manual de aplicação", src: "/images/entregaveis/manual-aplicacao.webp" },
+  { icon: Gift, label: "Três aplicações cortesia", src: "/images/entregaveis/tres-aplicacoes-valflores.webp" },
+  { icon: Handshake, label: "Consultoria de produção", src: "/images/entregaveis/consultoria-producao-joulou.webp" },
 ];
 
 // Etapas. Descrição máx. 12 palavras.
 const PROCESS_STEPS = [
-  { icon: MessagesSquare, title: "Briefing", desc: "Entender o negócio, o público e os pontos de contato." },
-  { icon: Lightbulb, title: "Conceito", desc: "Direção visual com fundamento estratégico e desdobramentos previstos." },
-  { icon: LayoutGrid, title: "Aplicação", desc: "Papelaria, sinalização, embalagem e digital num só sistema." },
-  { icon: Printer, title: "Execução", desc: "Gráfica e instalador definidos, produção supervisionada de perto." },
-  { icon: PackageCheck, title: "Entrega", desc: "Arquivos finais e manual para a equipe aplicar." },
+  { icon: MessagesSquare, title: "Briefing", desc: "Entender o negócio, o público e os pontos de contato.", src: "/images/processo/briefing-postits.webp" },
+  { icon: Lightbulb, title: "Conceito", desc: "Direção visual com fundamento estratégico e desdobramentos previstos.", src: "/images/processo/conceito-paleta-azul.webp" },
+  { icon: LayoutGrid, title: "Aplicação", desc: "Papelaria, sinalização, embalagem e digital num só sistema.", src: "/images/processo/aplicacao-almofadas.webp" },
+  { icon: Printer, title: "Execução", desc: "Gráfica e instalador definidos, produção supervisionada de perto.", src: "/images/processo/execucao-flatlay.webp" },
+  { icon: PackageCheck, title: "Entrega", desc: "Arquivos finais e manual para a equipe aplicar.", src: "/images/processo/entrega-leticia-caixa.webp" },
 ];
 
 const PROJECT_TYPES = ["Marca nova", "Rebranding", "Aplicações", "Outro"];
@@ -211,6 +211,7 @@ export default function CorporativoPage() {
                     >
                       <PhotoReveal
                         label={s.title}
+                        src={assetPath(s.src)}
                         className="flex h-full w-full flex-col items-center text-center gap-2 px-3 py-[clamp(18px,2.5vw,26px)] transition-colors hover:bg-[var(--surface)]"
                       >
                         <Icon className="text-[var(--brand)] transition-transform duration-200 group-hover:scale-110" size={26} strokeWidth={1.5} aria-hidden="true" />
@@ -250,7 +251,7 @@ export default function CorporativoPage() {
               </div>
               <h2 className={H2}>Tudo que sai do projeto.</h2>
               <p className={LEDE_CENTER}>
-                Os entregáveis da identidade corporativa.
+                O que é entregue no pacote de Identidade Corporativa.
               </p>
             </Reveal>
             <Reveal className="mx-auto flex max-w-[460px] flex-col">
@@ -260,6 +261,7 @@ export default function CorporativoPage() {
                   <PhotoReveal
                     key={i}
                     label={item.label}
+                    src={assetPath(item.src)}
                     className="flex w-full items-center gap-[14px] border-b border-[var(--line)] last:border-b-0 px-2 py-[clamp(14px,2vw,18px)] transition-colors hover:bg-[var(--surface)]"
                   >
                     <Icon className="shrink-0 text-[var(--brand)] transition-transform duration-200 group-hover:scale-110" size={26} strokeWidth={1.4} aria-hidden="true" />
