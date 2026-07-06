@@ -7,7 +7,6 @@ import {
   FONT_DISPLAY,
   FONT_MONO,
 } from "@/components/landing/editorial-tokens";
-import { PhotoPlaceholder } from "@/components/landing/PhotoPlaceholder";
 import { assetPath } from "@/lib/utils";
 
 type Subject = "elia" | "leticia";
@@ -69,7 +68,13 @@ export function QuemAssina() {
                   className="object-cover"
                 />
               ) : (
-                <PhotoPlaceholder project="Eliá" type="Foto a inserir" />
+                <Image
+                  src={assetPath("/images/decor/elia-estudio-parede.webp")}
+                  alt="Assinatura Eliá aplicada na parede do escritório em Teresina, sobre a mesa de trabalho"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  className="object-cover [object-position:center_42%]"
+                />
               )}
             </div>
             <figcaption className="text-center pb-[clamp(4px,0.8vw,10px)]">

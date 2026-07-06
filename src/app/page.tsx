@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { CTAButton } from "@/components/landing/CTAButton";
@@ -139,7 +140,14 @@ export default function HomePage() {
                 <figure className="m-0 rounded-[2px] bg-[var(--bg)] border border-[var(--line)]">
                   <div className="m-[clamp(10px,1.4vw,16px)] border border-[var(--line-strong)] p-[clamp(10px,1.4vw,16px)]">
                     <div className="relative aspect-[4/5] overflow-hidden">
-                      <PhotoPlaceholder project="Eliá" type="Foto a inserir" />
+                      <Image
+                        src={assetPath("/images/decor/home-materiais-elia.webp")}
+                        alt="Materiais impressos do Eliá sobre a mesa: agenda em couro com as iniciais LA e cartões com a assinatura Eliá"
+                        fill
+                        priority
+                        sizes="(max-width: 1024px) 100vw, 440px"
+                        className="object-cover [object-position:center_58%]"
+                      />
                     </div>
                   </div>
                 </figure>
