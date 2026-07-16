@@ -97,26 +97,53 @@ export function QuemAssina() {
           {isLeticia ? (
             <>
               <p className="text-[16.5px] leading-[1.7] text-[var(--ink)] m-0">
-                Letícia Aguiar é Diretora de Criação do Eliá. Publicitária com 25 anos de
-                experiência em ativação de marcas, especialista em marketing, foi sócia de uma
-                agência de publicidade por 12 anos antes de criar seu escritório. O nome Eliá vem
-                da composição do próprio nome: L de Letícia, A de Aguiar.
+                Publicitária (CEUT, 2002), especialista em Marketing (UFPI, 2003), com
+                experiência em marcas há 25 anos, professora universitária, palestrante, esposa do
+                Maurício e mãe do Gabriel.
               </p>
               <p className="text-[16.5px] leading-[1.7] text-[var(--ink)] m-0">
-                Diretora de arte, redatora, diretora de criação e coordenadora de marketing ao
-                longo da trajetória, hoje conduz o escritório com a mesma premissa: traduzir a
-                expectativa do cliente em uma experiência real, sempre além do que se esperava.
+                Letícia cresceu rodeada por criatividade, convivendo com familiares que faziam da
+                arte a sua profissão. Publicitário, jornalista, escritor, cantora, professora de
+                dança, modelo e até miss, são alguns dos exemplos que moldaram o seu mundo.
+              </p>
+              <p className="text-[16.5px] leading-[1.7] text-[var(--ink)] m-0">
+                Após sua formação universitária, atuou como diretora de arte, redatora, diretora de
+                criação e coordenadora de marketing em diversas agências de publicidade e empresas.
+                Com vasta experiência na área, fundou sua própria agência e permaneceu sócia por 12
+                anos, até resolver trilhar ‘carreira solo’ criando um escritório de design que hoje
+                é seu filho profissional predileto.
               </p>
               <p className="text-[16.5px] leading-[1.7] text-[var(--ink-soft)] m-0">
-                O Eliá trabalha com identidade visual aplicada, com atenção específica à produção
-                gráfica: papel, gramatura, acabamento, fornecedor. Empresa ou evento, o
-                acompanhamento continua mesmo após a identidade ser aprovada.
+                Da extração da essência dessa trajetória, nasceu o Eliá. Com ‘L’ de Letícia e ‘A’ de
+                Aguiar.
               </p>
             </>
           ) : (
-            <p className="text-[16.5px] leading-[1.7] text-[var(--ink-soft)] m-0">
-              O texto de apresentação do Eliá será inserido em breve.
-            </p>
+            <>
+              <p className="text-[16.5px] leading-[1.7] text-[var(--ink)] m-0">
+                O Eliá desenvolve soluções visuais para eventos e empresas. A expectativa é
+                traduzir toda a essência da sua festa ou do seu negócio em um projeto de identidade
+                visual único e marcante.
+              </p>
+              <p className="text-[16.5px] leading-[1.7] text-[var(--ink)] m-0">
+                No pacote Festivo, o monograma, convite, estampa, papelaria e brindes
+                personalizados são alguns dos produtos visuais criados para tornar a sua festa
+                memorável e além do esperado.
+              </p>
+              <p className="text-[16.5px] leading-[1.7] text-[var(--ink)] m-0">
+                Já no pacote Corporativo, o logotipo, papelaria, comunicação visual e embalagens
+                personalizadas são trabalhados para fortalecer os valores da sua marca e
+                proporcionar experiências únicas aos seus clientes.
+              </p>
+              <p className="text-[16.5px] leading-[1.7] text-[var(--ink-soft)] m-0">
+                Seja qual for o objetivo, o Eliá está pronto para alinhar as etapas e fornecer todo
+                o suporte necessário, acompanhando cada detalhe e dando as melhores orientações
+                quanto aos materiais e ao design.
+              </p>
+              <p className={`${FONT_DISPLAY} italic text-[clamp(18px,2vw,22px)] leading-[1.4] text-[var(--ink)] m-0`}>
+                Eliá Identidade Visual, além da expectativa.
+              </p>
+            </>
           )}
         </div>
       </div>

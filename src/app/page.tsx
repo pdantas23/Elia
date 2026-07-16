@@ -176,11 +176,7 @@ export default function HomePage() {
               <div className={EYEBROW}>
                 <span>Por onde começar</span>
               </div>
-              <h2 className={H2}>
-                Dois caminhos.
-                <br />
-                O mesmo critério em ambos.
-              </h2>
+              <h2 className={H2}>Dois caminhos, o mesmo critério.</h2>
               <p className={LEDE_CENTER}>
                 O Eliá atende dois universos com o mesmo nível de cuidado e domínio técnico: o
                 universo Corporativo, onde sua marca se destaca; e a área Festiva, elevando as

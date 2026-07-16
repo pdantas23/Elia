@@ -18,8 +18,7 @@ export const INSTAGRAM_URL = "https://instagram.com/eliaidentidadevisual";
 /** PENDENTE: confirmar a URL da página da Letícia no Pinterest. */
 export const PINTEREST_URL = "https://br.pinterest.com/eliaidentidadevisual";
 
-/** PENDENTE: confirmar e-mail oficial com a Letícia. */
-export const CONTACT_EMAIL = "[EMAIL_AQUI]";
+export const CONTACT_EMAIL = "aguiarleticia@hotmail.com";
 
 // ─────────── Estúdio (Teresina, PI) ───────────
 export const STUDIO_ADDRESS = "Rua das Orquídeas, 781";
