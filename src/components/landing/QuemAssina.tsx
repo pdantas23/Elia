@@ -113,7 +113,7 @@ export function QuemAssina() {
                 anos, até resolver trilhar ‘carreira solo’ criando um escritório de design que hoje
                 é seu filho profissional predileto.
               </p>
-              <p className="text-[16.5px] leading-[1.7] text-[var(--ink-soft)] m-0">
+              <p className={`${FONT_DISPLAY} italic text-[clamp(18px,2vw,22px)] leading-[1.4] text-[var(--ink)] m-0`}>
                 Da extração da essência dessa trajetória, nasceu o Eliá. Com ‘L’ de Letícia e ‘A’ de
                 Aguiar.
               </p>
@@ -135,7 +135,7 @@ export function QuemAssina() {
                 personalizadas são trabalhados para fortalecer os valores da sua marca e
                 proporcionar experiências únicas aos seus clientes.
               </p>
-              <p className="text-[16.5px] leading-[1.7] text-[var(--ink-soft)] m-0">
+              <p className="text-[16.5px] leading-[1.7] text-[var(--ink)] m-0">
                 Seja qual for o objetivo, o Eliá está pronto para alinhar as etapas e fornecer todo
                 o suporte necessário, acompanhando cada detalhe e dando as melhores orientações
                 quanto aos materiais e ao design.
