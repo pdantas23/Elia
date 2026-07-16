@@ -87,11 +87,11 @@ const INCLUDED_ITEMS = [
 
 // Etapas. Descrição máx. 12 palavras.
 const PROCESS_STEPS = [
-  { icon: MessagesSquare, title: "Briefing", desc: "Entender o casal, a história e o tom do evento." },
-  { icon: Lightbulb, title: "Conceito", desc: "Paleta, tipografia e a razão de cada escolha." },
-  { icon: LayoutGrid, title: "Aplicação", desc: "Convite, menu, sinalização e lembrança ganham forma." },
-  { icon: Printer, title: "Execução", desc: "Papel e fornecedor definidos, produção acompanhada de perto." },
-  { icon: PackageCheck, title: "Entrega", desc: "O material chega na sua mão para o dia." },
+  { icon: MessagesSquare, title: "Briefing", desc: "Entender o casal, a história e o tom do evento.", src: "/images/processo/briefing-postits.webp" },
+  { icon: Lightbulb, title: "Conceito", desc: "Paleta, tipografia e a razão de cada escolha.", src: "/images/processo/conceito-paleta-azul.webp" },
+  { icon: LayoutGrid, title: "Aplicação", desc: "Convite, menu, sinalização e lembrança ganham forma.", src: "/images/processo/aplicacao-almofadas.webp" },
+  { icon: Printer, title: "Execução", desc: "Papel e fornecedor definidos, produção acompanhada de perto.", src: "/images/processo/execucao-flatlay.webp" },
+  { icon: PackageCheck, title: "Entrega", desc: "O material chega na sua mão para o dia.", src: "/images/processo/entrega-leticia-caixa.webp" },
 ];
 
 const EVENT_TYPES = ["Casamento", "15 anos", "Aniversário", "Outro evento social"];
@@ -262,6 +262,7 @@ export default function EventosPage() {
                     >
                       <PhotoReveal
                         label={s.title}
+                        src={s.src ? assetPath(s.src) : undefined}
                         className="flex h-full w-full flex-col items-center text-center gap-2 px-3 py-[clamp(18px,2.5vw,26px)] transition-colors hover:bg-[var(--surface)]"
                       >
                         <Icon className="text-[var(--brand)] transition-transform duration-200 group-hover:scale-110" size={26} strokeWidth={1.5} aria-hidden="true" />

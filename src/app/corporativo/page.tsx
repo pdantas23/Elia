@@ -82,8 +82,8 @@ const INCLUDED_ITEMS = [
 const PROCESS_STEPS = [
   { icon: MessagesSquare, title: "Briefing", desc: "Entender o negócio, o público e os pontos de contato.", src: "/images/processo/briefing-postits.webp" },
   { icon: Lightbulb, title: "Conceito", desc: "Direção visual com fundamento estratégico e desdobramentos previstos.", src: "/images/processo/conceito-paleta-azul.webp" },
-  { icon: LayoutGrid, title: "Aplicação", desc: "Papelaria, sinalização, embalagem e digital num só sistema.", src: "/images/processo/aplicacao-almofadas.webp" },
-  { icon: Printer, title: "Execução", desc: "Gráfica e instalador definidos, produção supervisionada de perto.", src: "/images/processo/execucao-flatlay.webp" },
+  { icon: LayoutGrid, title: "Aplicação", desc: "Papelaria, sinalização, embalagem e digital num só sistema.", src: "/images/processo/aplicacao-corporativo-aurois.webp" },
+  { icon: Printer, title: "Execução", desc: "Gráfica e instalador definidos, produção supervisionada de perto.", src: "/images/processo/execucao-corporativo-joulou.webp" },
   { icon: PackageCheck, title: "Entrega", desc: "Arquivos finais e manual para a equipe aplicar.", src: "/images/processo/entrega-leticia-caixa.webp" },
 ];
 
@@ -211,7 +211,7 @@ export default function CorporativoPage() {
                     >
                       <PhotoReveal
                         label={s.title}
-                        src={assetPath(s.src)}
+                        src={s.src ? assetPath(s.src) : undefined}
                         className="flex h-full w-full flex-col items-center text-center gap-2 px-3 py-[clamp(18px,2.5vw,26px)] transition-colors hover:bg-[var(--surface)]"
                       >
                         <Icon className="text-[var(--brand)] transition-transform duration-200 group-hover:scale-110" size={26} strokeWidth={1.5} aria-hidden="true" />
