@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
   description:
     "Identidade visual aplicada, não apenas projetada. Do conceito à execução real.",
-  metadataBase: new URL("https://eliaidentidadevisual.com.br"),
+  metadataBase: new URL("https://eliaidentidadevisual.com"),
   openGraph: {
     type: "website",
     locale: "pt_BR",
